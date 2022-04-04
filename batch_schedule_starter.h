@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <algorithm>
 using namespace std::chrono;
 using timestamp = std::time_t;
 enum STATUS
@@ -17,6 +18,8 @@ class Job
 {
     public:
       int jobNum;
+      //Which node is it running on currently
+      int nodeId;
       //Time the job was submitted by the user
       timestamp submitTime;
       //Time the job actually starts running on CPU(s) 
@@ -64,6 +67,7 @@ class Job
 class Node 
 {
   public:
+    int nodeId;
     //Total cores in the node
     int coreCount;
     //Cores in use by a job
@@ -72,19 +76,26 @@ class Node
     int memoryAmount;
     //Memory in use by a job
     int memoryAllocated = 0;
-    Node(int coreCount, int memoryAmount)
+    Node(int nodeId, int coreCount, int memoryAmount)
     {
+      this->nodeId = nodeId;
       this->coreCount = coreCount;
       this->memoryAmount = memoryAmount;
     }
-
 };
 
 std::vector<Job> buildPresetJobs(std::time_t startTime);
-std::vector<Node> buildNodes();
+std::vector<Node> buildNodes(int nodeCount);
 bool simulationFinished(std::vector<Job> jobList, std::vector<Job> jobQueue, std::vector<Job> runningJobs);
 //First Come First Serve (FCFS)
 void runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime);
 
 //Shortest Job First (SJF)
 void runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime);
+int checkNodeResources(Job waitingJob, std::vector<Node> nodeList);
+int isJobValid(Job waitingJob, std::vector<Node> nodeList);
+
+
+
+  
+  

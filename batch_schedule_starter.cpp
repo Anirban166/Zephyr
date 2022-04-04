@@ -30,18 +30,18 @@ int main(int argc, char* argv[])
     std::time_t startTime = std::chrono::system_clock::to_time_t(startTimePoint);
 
     //Generate nodes
-    std::vector<Node> nodeList = buildNodes();
+    std::vector<Node> nodeList = buildNodes(nodeCount);
     // Generate jobs
     std::vector<Job> jobList = buildPresetJobs(startTime);
     
     // Choose algorithm to run
     if(!schedulingAlgorithm.compare("FCFS")) 
     { 
-        runFCFS
+         //runFCFS
     }
     else if(!schedulingAlgorithm.compare("SJF"))
     {
-        
+        runSJF(nodeList, jobList, startTime);
     }
 }
 
@@ -49,9 +49,9 @@ std::vector<Node> buildNodes(int nodeCount)
 {
     std::vector<Node> nodeList;
     // coreCount, coresAllocated, memoryAmount, memoryAllocated
-    Node firstNode = Node(24,102400);
-    Node secondNode = Node(24,102400);
-    Node thirdNode = Node(24,102400);
+    Node firstNode = Node(0, 24, 102400);
+    Node secondNode = Node(1, 24, 102400);
+    Node thirdNode = Node(2, 24, 102400);
     nodeList.push_back(firstNode);
     nodeList.push_back(secondNode);
     nodeList.push_back(thirdNode);
