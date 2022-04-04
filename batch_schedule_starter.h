@@ -1,3 +1,4 @@
+#pragma once
 #include <ctime>
 #include <cmath>
 #include <random>
@@ -7,7 +8,7 @@
 #include <cstring>
 #include <iostream>
 using namespace std::chrono;
-using timestamp = seconds;
+using timestamp = std::time_t;
 enum STATUS
 {
   RUNNING, WAITING, CANCELLED
@@ -20,78 +21,70 @@ class Job
       timestamp submitTime;
       //Time the job actually starts running on CPU(s) 
       timestamp startTime;
+      //The startTime - submitTime
       timestamp waitTime;
+      //Inputted by the user on job creation
       timestamp requestedRunTime;
+      //Generated statically when creating job to simulate the amount of time actually needed
       timestamp trueRunTime;
+      //startTime + trueRunTime
       timestamp stopTime;
       double requestedCPUs;
+      double usedCPUs;
       //Actual time run on each CPU. CPU 1 == trueRunTime. multiple CPUs (parallel) - take all the time measurements, average it
       std::vector<timestamp> cpuTimes; 
       double requestedMemory;
       double usedMemory;
-      STATUS jobStatus;
+      STATUS jobStatus = WAITING;
       int userId;
       int groupId;
       int precedingJobId;
-      timestamp thinkTimeFromPreceding;
 
       Job(
         int jobNum,
-        timestamp startTime,
-        timestamp waitTime,
-        timestamp requestedRunTime,
-        timestamp trueRunTime,
-        timestamp stopTime,
+        std::time_t submitTime,
+        std::time_t requestedRunTime,
+        std::time_t trueRunTime,
         double requestedCPUs,
-        std::vector<timestamp> cpuTimes,
+        double usedCPUs,
         double requestedMemory,
-        double usedMemory,
-        STATUS jobStatus,
-        int userId,
-        int groupId,
-        int precedingJobId,
-        timestamp thinkTimeFromPreceding){
+        double usedMemory)
+        {
           this->jobNum = jobNum;
-          this->startTime = startTime;
-          this->waitTime = waitTime;
+          this->submitTime = submitTime;
           this->requestedRunTime = requestedRunTime;
           this->trueRunTime = trueRunTime;
-          this->stopTime = stopTime;
           this->requestedCPUs = requestedCPUs;
-          //Actual time run on each CPU. CPU 1 == trueRunTime. multiple CPUs (parallel) - take all the time measurements, average it
-          this->cpuTimes = cpuTimes; 
+          this->usedCPUs = usedCPUs;
           this->requestedMemory = requestedMemory;
           this->usedMemory = usedMemory;
-          this->jobStatus = jobStatus;
-          this->userId = userId;
-          this->groupId = groupId;
-          this->precedingJobId = precedingJobId;
-          this->thinkTimeFromPreceding = thinkTimeFromPreceding;
       }
 };
 
-
-class Node {
-  int coreCount;
-  int coresUsed;
-  int memoryAmount;
-  int memoryUsed;
-
-  Node(int coreCount, int coresUsed, int memoryAmount, int memoryUsed){
-    this->coreCount = coreCount;
-    this->coresUsed = coresUsed;
-    this->memoryAmount = memoryAmount;
-    this->memoryUsed = memoryUsed;
-  }
+class Node 
+{
+  public:
+    //Total cores in the node
+    int coreCount;
+    //Cores in use by a job
+    int coresAllocated = 0;
+    //Total cores in the node in Gib
+    int memoryAmount;
+    //Memory in use by a job
+    int memoryAllocated = 0;
+    Node(int coreCount, int memoryAmount)
+    {
+      this->coreCount = coreCount;
+      this->memoryAmount = memoryAmount;
+    }
 
 };
 
-std::vector<Job> buildPresetJobs();
+std::vector<Job> buildPresetJobs(std::time_t startTime);
+std::vector<Node> buildNodes();
+bool simulationFinished(std::vector<Job> jobList, std::vector<Job> jobQueue, std::vector<Job> runningJobs);
+//First Come First Serve (FCFS)
+void runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime);
 
-/*
-auto startTime = high_resolution_clock::now();
-// Code
-auto stopTime = high_resolution_clock::now();
-// change the duration cast to whatever unit of time you want
-auto duration = duration_cast<microseconds>(stopTime - startTime);
-*/
+//Shortest Job First (SJF)
+void runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime);
