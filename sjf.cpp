@@ -1,7 +1,5 @@
-#include "batch_schedule_starter.h"
+#include "batchScheduler.h"
 
-// Returns node ID for whichever node has the required resources for the job that requests it, 
-// otherwise if all nodes can't satisfy the resource requirements, it returns a -1:
 int checkNodeResources(Job waitingJob, std::vector<Node> nodeList)
 {
     for(std::vector<Node>::iterator currentNode = nodeList.begin(); currentNode != nodeList.end(); ++currentNode)

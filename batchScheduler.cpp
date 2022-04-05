@@ -1,10 +1,5 @@
-#include "batch_schedule_starter.h"
-// Compile and execute using:
-// g++ batch_schedule_starter.cpp -o batch_schedule_starter && ./batch_schedule_starter 
-/**
-   Args: Number of jobs, CPUs available, Memory Available, Nodes available,
-   Scheduling algorithm, Verbose
- **/ 
+#include "batchScheduler.h"
+
 int main(int argc, char* argv[]) 
 {
     if(argc != 3)
@@ -22,22 +17,21 @@ int main(int argc, char* argv[])
     std::string schedulingAlgorithm = argv[2];
     int nodeCount = 3;
     int maxCoresPerNode = 24;
-    //100 GiB per node, i.e. 102400 MiB
+    // Allocating 100 GiB per node: (102400 MiB)
     int maxMemoryPerNode = 102400;
     
-    //Get the current time to reference as a start point  for the entire simulation
+    // Get the current time to reference as a start point  for the entire simulation
     time_point<system_clock, seconds> startTimePoint = time_point_cast<seconds>(system_clock::now());
     std::time_t startTime = std::chrono::system_clock::to_time_t(startTimePoint);
 
-    //Generate nodes
+    // Generate nodes and jobs:
     std::vector<Node> nodeList = buildNodes(nodeCount);
-    // Generate jobs
     std::vector<Job> jobList = buildPresetJobs(startTime);
     
-    // Choose algorithm to run
+    // Choose algorithm to run based on command line input:
     if(!schedulingAlgorithm.compare("FCFS")) 
     { 
-         //runFCFS
+        runFCFS(nodeList, jobList, startTime);
     }
     else if(!schedulingAlgorithm.compare("SJF"))
     {
@@ -83,12 +77,10 @@ bool simulationFinished(std::vector<Job> jobList, std::vector<Job> jobQueue, std
 /*
 std::vector<Job> buildRandomizedJobs(int jobCount, std::vector<Job> jobList)
 {
-    
-  //  double random = lowLimit + (rand() % higherLimit - 1)
+    // double random = lowLimit + (rand() % higherLimit - 1)
     for(int i = 0; i < jobCount; i++)  
     {
         jobList.push_back(currentJob);
-
     }
 } */
 

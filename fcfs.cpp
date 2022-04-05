@@ -1,4 +1,4 @@
-#include "batch_schedule_starter.h"
+#include "batchScheduler.h"
 
 void runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime)
 {
