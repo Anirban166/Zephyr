@@ -52,11 +52,11 @@ std::vector<Node> buildNodes(int nodeCount)
 std::vector<Job> buildPresetJobs(std::time_t startTime)
 {   
   std::vector<Job> jobList;
-  jobList.push_back(Job(1, startTime + 1, 60, 30, 6, 6, 102400, 90000));
-  jobList.push_back(Job(2, startTime + 5, 120, 100, 8, 8, 102400, 90000));
-  jobList.push_back(Job(3, startTime + 5, 100, 95, 8, 4, 102400, 90000));
-  jobList.push_back(Job(4, startTime + 5, 90, 50, 8, 6, 102400, 45000));
-  jobList.push_back(Job(5, startTime + 8, 80, 40, 6, 6, 102400, 90000));
+  jobList.push_back(Job(0, startTime + 1, 60, 30, 6, 6, 102400, 90000));
+  jobList.push_back(Job(1, startTime + 5, 120, 100, 8, 8, 102400, 90000));
+  jobList.push_back(Job(2, startTime + 5, 100, 95, 8, 4, 102400, 90000));
+  jobList.push_back(Job(3, startTime + 5, 90, 50, 8, 6, 102400, 45000));
+  jobList.push_back(Job(4, startTime + 8, 80, 40, 6, 6, 102400, 90000));
   return jobList;
 }
 

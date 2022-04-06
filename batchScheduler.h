@@ -10,7 +10,7 @@
 #include <algorithm>
 using namespace std::chrono;
 using timestamp = std::time_t;
-enum STATUS { RUNNING, WAITING, CANCELLED };
+enum STATUS { RUNNING, WAITING, QUEUED, CANCELLED };
 // --------------
 // 1.0: Classes
 // --------------
@@ -86,8 +86,12 @@ int isJobValid(Job waitingJob, std::vector<Node> nodeList);
 // 2.4) Returns node ID for whichever node has the required resources for the job that requests it, 
 // otherwise if all nodes can't satisfy the resource requirements, it returns a -1:
 int checkNodeResources(Job waitingJob, std::vector<Node> nodeList);
+
+std::vector<Job> verifyJobs(std::vector<Job> jobList, std::vector<Node> nodeList);
 // 2.5) Function to indicate the end of simulation, when the joblist and queues are empty at the very end:
 bool simulationFinished(std::vector<Job> jobList, std::vector<Job> jobQueue, std::vector<Job> runningJobs);
+// 2.6) Function to print jobs:
+void printJobs(std::vector<Job> jobs);
 
 // Notes:
 // 1) Keep definitions of utility functions in the required files
