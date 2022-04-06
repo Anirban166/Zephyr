@@ -10,7 +10,7 @@ int checkNodeResources(Job waitingJob, std::vector<Node> nodeList)
     return -1;   
 }
 
-void runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList,  std::time_t startTime)
+void runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime)
 {
     std::vector<Job> jobQueue;
     std::vector<Job> runningJobs;
