@@ -1,6 +1,6 @@
 #include "batchScheduler.h"
 
-int main(int argc, char* argv[]) 
+auto main(int argc, char* argv[]) -> int
 {
     if(argc != 3)
     {
@@ -13,18 +13,15 @@ int main(int argc, char* argv[])
     for(int i = 0; i < argc; ++i) 
         std::cout << "Argument " << i << ": " << argv[i] << "\n";  
 
-    int jobCount = atoi(argv[1]);
+    // int jobCount = atoi(argv[1]);
     std::string schedulingAlgorithm = argv[2];
-    int nodeCount = 3;
-    int maxCoresPerNode = 24;
-    // Allocating 100 GiB per node: (102400 MiB)
-    int maxMemoryPerNode = 102400;
     
     // Get the current time to reference as a start point  for the entire simulation
     time_point<system_clock, seconds> startTimePoint = time_point_cast<seconds>(system_clock::now());
     std::time_t startTime = std::chrono::system_clock::to_time_t(startTimePoint);
 
     // Generate nodes and jobs:
+    int nodeCount = 3;    
     std::vector<Node> nodeList = buildNodes(nodeCount);
     std::vector<Job> jobList = buildPresetJobs(startTime);
     
@@ -42,10 +39,11 @@ int main(int argc, char* argv[])
 std::vector<Node> buildNodes(int nodeCount)
 {
     std::vector<Node> nodeList;
-    // coreCount, coresAllocated, memoryAmount, memoryAllocated
-    Node firstNode = Node(0, 24, 102400);
-    Node secondNode = Node(1, 24, 102400);
-    Node thirdNode = Node(2, 24, 102400);
+    int maxCoresPerNode = 24;
+    int maxMemoryPerNode = 102400; // Allocating 100 GiB per node: (102400 MiB)
+    Node firstNode = Node(0, maxCoresPerNode, maxMemoryPerNode);
+    Node secondNode = Node(1, maxCoresPerNode, maxMemoryPerNode);
+    Node thirdNode = Node(2, maxCoresPerNode, maxMemoryPerNode);
     nodeList.push_back(firstNode);
     nodeList.push_back(secondNode);
     nodeList.push_back(thirdNode);
@@ -55,7 +53,6 @@ std::vector<Node> buildNodes(int nodeCount)
 std::vector<Job> buildPresetJobs(std::time_t startTime)
 {   
   std::vector<Job> jobList;
-  // jobNum, submitTime, requestedRunTime, trueRunTime, requestedCPUs, usedCPUs, requestedMem, usedMem
   Job firstJob = Job(1, startTime + 1, 60, 30, 6, 6, 102400, 90000);
   Job secondJob = Job(2, startTime + 5, 120, 100, 8, 8, 102400, 90000);
   Job thirdJob = Job(3, startTime + 5, 100, 95, 8, 4, 102400, 90000);
