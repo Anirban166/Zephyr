@@ -1,15 +1,5 @@
 #include "batchScheduler.h"
 
-int checkNodeResources(Job waitingJob, std::vector<Node> nodeList)
-{
-    for(std::vector<Node>::iterator currentNode = nodeList.begin(); currentNode != nodeList.end(); ++currentNode)
-    {
-        if(waitingJob.requestedCPUs <= (*currentNode).coresAllocated && waitingJob.requestedMemory <= (*currentNode).memoryAllocated)
-            return (*currentNode).nodeId;    
-    } 
-    return -1;   
-}
-
 int isJobValid(Job waitingJob, std::vector<Node> nodeList)
 {
     for(std::vector<Node>::iterator currentNode = nodeList.begin(); currentNode != nodeList.end(); ++currentNode)
@@ -84,7 +74,7 @@ void runSJF(std::vector<Node> nodeList, std::vector<Job> jobList,  std::time_t s
         std::cout << "Running job " << currentJob.jobNum << " with a submit time of: " << currentJob.submitTime << std::endl;
         std::cout << "Running job " << currentJob.jobNum << " with a start time of: " << currentJob.startTime << std::endl;
         std::cout << "Running job " << currentJob.jobNum << " with a requested job runtime of: " << currentJob.requestedRunTime << std::endl;
-        // std::cout << "Current time for the SJF algorithm: " << currentTime << std::endl;
+        // std::cout << "Current time for the FCFS algorithm: " << currentTime << std::endl;
         // Increment to the next second: (step-increase in time)
         currentTime++;
         }
