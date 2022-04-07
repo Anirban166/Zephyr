@@ -1,22 +1,23 @@
 #include "batchScheduler.h"
 
-Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime)
+Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp startTime)
 {
     std::vector<Job> jobQueue;
     std::vector<Job> runningJobs;
+    std::vector<Job> finalJobList;
     std::cout << "Running the FCFS scheduling algorithm." << std::endl;
-    std::time_t currentTime = startTime;
+    timestamp currentTime = startTime;
     int simIteration = 0;
     jobList = verifyJobs(jobList, nodeList);
     Metrics fcfsMetrics = Metrics("FCFS");
+    fcfsMetrics.totalJobsRun = jobList.size();
       
     while(!simulationFinished(jobList, jobQueue, runningJobs))
     {   
-       // std::cout << "FCFS ITERATION: " << simIteration << "\n";
+        std::cout << "FCFS ITERATION: " << simIteration << "\n";
 
         // First check if any jobs are ready to be added to the queue:
-        if(jobList.size())
-        {    
+        if(jobList.size()){    
             for(std::vector<Job>::iterator currentJobIter = std::prev(jobList.end()); currentJobIter != std::prev(jobList.begin()); --currentJobIter)
             {
                 Job currentJob = *currentJobIter;
@@ -29,6 +30,19 @@ Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_
                 }
             }  
         }
+
+        //SORT JOBS FOR FCFS SCHEDULING, SORT WITH THE SMALLEST VALUE SUBMIT TIME (highest priority) LAST.
+       // std::cout << "Curr time: " << currentTime << " queue before sort.\n"; 
+       // printJobs(jobQueue);
+        // Sort the queue based on runtime to have the shortest jobs considered first:
+        std::sort(jobQueue.begin(), jobQueue.end(), [](const auto& lhs, const auto& rhs)
+        {
+            return lhs.submitTime > rhs.submitTime;
+        });
+        // std::reverse after this to switch the order to descending
+        std::reverse(jobQueue.begin(), jobQueue.end());
+        std::cout << "JOB QUEUE SORTED: \n";
+        printJobs(jobQueue);
          
         
         if(runningJobs.size()){
@@ -37,26 +51,19 @@ Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_
             {
                 if(currentTime == ((*runningJob).startTime + (*runningJob).trueRunTime))
                 {
-                    runningJobs.erase(runningJob);
+                    std::cout << "Job: " << (*runningJob).jobNum << " FINISHED RUNNING ON NODE: " << (*runningJob).nodeId << "\n";
+                    (*runningJob).stopTime = currentTime;
+                    
+                    finalJobList.push_back((*runningJob));
+                    
                     // Reset node resources: (CPU cores and memory allocated)
                     nodeList.at((*runningJob).nodeId).coresAllocated -= (*runningJob).requestedCPUs;
                     nodeList.at((*runningJob).nodeId).memoryAllocated -= (*runningJob).requestedMemory;
+                    runningJobs.erase(runningJob);
                 }
             }
-        }
-        
+        }   
 
-        //SORT JOBS FOR FCFS SCHEDULING, SORT WITH THE SMALLEST VALUE RUNTIME (highest priority) LAST.
-        //std::cout << "Curr time: " << currentTime << " queue before sort.\n"; 
-        printJobs(jobQueue);
-        // Sort the queue based on runtime to have the shortest jobs considered first:
-        std::sort(jobQueue.begin(), jobQueue.end(), [](const auto& lhs, const auto& rhs)
-        {
-            return lhs.submitTime < rhs.submitTime;
-        });
-        // std::reverse after this to switch the order to descending
-        printJobs(jobQueue);
-        
         std::vector<Job> waitingList;
         // Finally, start jobs in the queue as resources permit
         for(std::vector<Job>::iterator waitingJob = jobQueue.begin(); waitingJob != jobQueue.end(); ++waitingJob)
@@ -65,18 +72,54 @@ Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_
             // If we have a node that is available, assign us to run on it:
             if(selectedNodeId > -1)
             {
-                Node selectedNode = nodeList.at(selectedNodeId);
-                (*waitingJob).jobStatus = RUNNING;
-                (*waitingJob).startTime = currentTime;
-                selectedNode.coresAllocated += (*waitingJob).requestedCPUs;
-                selectedNode.memoryAllocated += (*waitingJob).requestedMemory;
-                //jobQueue.erase(waitingJob);
-                Job selectedJob = (*waitingJob);
+                Job selectedJob = (*waitingJob);                
+                selectedJob.startTime = currentTime;
+                selectedJob.waitTime = currentTime - selectedJob.submitTime;
+                
+                //Add this jobs waiting time to the total time.
+                fcfsMetrics.totalWaitSum += selectedJob.waitTime;
+                if(fcfsMetrics.longestWait < selectedJob.waitTime)
+                    fcfsMetrics.longestWait = selectedJob.waitTime;
+                
+                //Stretch here (waitTime + trueRunTime)/trueRunTime
+                selectedJob.stretch = (double) (selectedJob.waitTime + selectedJob.trueRunTime) / (double) selectedJob.trueRunTime;
+                fcfsMetrics.totalStretch += selectedJob.stretch;
+                if(fcfsMetrics.maxStretch < selectedJob.stretch)
+                    fcfsMetrics.maxStretch = selectedJob.stretch;
+                
+                //Note turnaround time and add to total.
+                selectedJob.turnAroundTime = (selectedJob.startTime + selectedJob.trueRunTime) - selectedJob.submitTime; // stopTime - submitTime
+                fcfsMetrics.totalturnAroundTime += selectedJob.turnAroundTime;
+                if(fcfsMetrics.maxTurnAroundTime < selectedJob.turnAroundTime)
+                    fcfsMetrics.maxTurnAroundTime = selectedJob.turnAroundTime;
+
+                //Allocate resources for the waiting job
+                nodeList.at(selectedNodeId).coresAllocated += selectedJob.requestedCPUs;
+                nodeList.at(selectedNodeId).memoryAllocated += selectedJob.requestedMemory;
+                selectedJob.jobStatus = RUNNING;
                 selectedJob.nodeId = selectedNodeId;
                 runningJobs.push_back(selectedJob);
-                std::cout << "Running job " << selectedJob.jobNum << " with a submit time of: " << selectedJob.submitTime << std::endl;
+                std::cout << "Running job " << selectedJob.jobNum << " with a submit time of: " << selectedJob.submitTime << " on node: " << selectedNodeId << std::endl;
                 std::cout << "Running job " << selectedJob.jobNum << " with a start time of: " << selectedJob.startTime << std::endl;
                 std::cout << "Running job " << selectedJob.jobNum << " with a requested job runtime of: " << selectedJob.requestedRunTime << std::endl;
+
+                //Calculate cpus actually being used as well as the requested number.
+                int numCPUsInUse = 0;
+                unsigned long memoryInUse = 0;
+                for(std::vector<Job>::iterator runningJob = runningJobs.begin(); runningJob != runningJobs.end(); ++runningJob){
+                    Job currRunningJob = (*runningJob);
+                    numCPUsInUse += currRunningJob.usedCPUs;
+                    memoryInUse += currRunningJob.usedMemory;
+                }
+                //Build totals for metrics. 
+                fcfsMetrics.totalCPUsUsed += numCPUsInUse;
+                if(numCPUsInUse > fcfsMetrics.maxCPUsUsed)
+                    fcfsMetrics.maxCPUsUsed = numCPUsInUse;
+                    
+                fcfsMetrics.totalMemoryUsed += memoryInUse;
+                if(memoryInUse > fcfsMetrics.maxMemoryUsed)
+                    fcfsMetrics.maxMemoryUsed = memoryInUse;
+                    
             }
             else 
             {
@@ -92,5 +135,8 @@ Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_
         currentTime++;
         simIteration++;
     }
+    //Use finalJobList to calculate metrics. 
+    
     return fcfsMetrics;
+    
 }

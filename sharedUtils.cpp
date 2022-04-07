@@ -33,7 +33,7 @@ void printJobs(std::vector<Job> jobs)
     int count = 0;
     std::cout << "[";
     for(std::vector<Job>::iterator currJob = jobs.begin(); currJob != jobs.end(); ++currJob){
-        std::cout << count << "th job in list: " << (*currJob).jobNum << " start time: " << (*currJob).requestedRunTime << ",";
+        std::cout << count << "th job in list: " << (*currJob).jobNum << " req runtime: " << (*currJob).requestedRunTime << ",";
         count++;
     }
     std::cout << "]" << "\n";
