@@ -8,50 +8,43 @@ void runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t st
     std::time_t currentTime = startTime;
     int simIteration = 0;
     jobList = verifyJobs(jobList, nodeList);
-     // If the job is ready to submit right now, put it in the queue and remove it from joblist:
-     for(std::vector<Job>::iterator currentJobIter = jobList.end(); currentJobIter != jobList.begin(); --currentJobIter)
-     {  
-        Job currentJob = *currentJobIter;  
-        // If the job is ready to submit right now, put it in the queue and remove it from joblist:
-        if(currentJob.submitTime == currentTime)
-        {
-            jobQueue.push_back(currentJob);
-            jobList.erase(currentJobIter);    
-        }
-     }
-     // First check if any jobs are ready to be added to the queue:
-        for(std::vector<Job>::iterator currentJobIter = jobList.end(); currentJobIter != jobList.begin(); --currentJobIter)
-        {
-            Job currentJob = *currentJobIter;
-            // Check if it is possible to service this request at all: (based on the maximum resources we have available)
-            if(!isJobValid(currentJob, nodeList))
-            {   // Discard job if infeasible:
-                jobList.erase(currentJobIter);
-            }
-            
-            // If the job is ready to submit right now, put it in the queue and remove it from joblist:
-            if(currentJob.submitTime == currentTime)
-            {
-                jobQueue.push_back(currentJob);
-                jobList.erase(currentJobIter);    
-            }
-        }    
+      
     while(!simulationFinished(jobList, jobQueue, runningJobs))
     {   
         std::cout << "SJF ITERATION: " << simIteration << "\n";
-       
-        // Check if any running jobs are finished:
-        for(std::vector<Job>::iterator runningJob = runningJobs.end(); runningJob != runningJobs.begin(); --runningJob)
-        {
-            if(currentTime == ((*runningJob).startTime + (*runningJob).trueRunTime))
+
+        // First check if any jobs are ready to be added to the queue:
+        if(jobList.size()){    
+            for(std::vector<Job>::iterator currentJobIter = std::prev(jobList.end()); currentJobIter != std::prev(jobList.begin()); --currentJobIter)
             {
-                runningJobs.erase(runningJob);
-                // Reset node resources: (CPU cores and memory allocated)
-                nodeList.at((*runningJob).nodeId).coresAllocated -= (*runningJob).requestedCPUs;
-                nodeList.at((*runningJob).nodeId).memoryAllocated -= (*runningJob).requestedMemory;
+                Job currentJob = *currentJobIter;
+                // If the job is ready to submit right now, put it in the queue and remove it from joblist:
+                if(currentJob.submitTime == currentTime)
+                {
+                    currentJob.jobStatus = QUEUED;
+                    jobQueue.push_back(currentJob);
+                    jobList.erase(currentJobIter);    
+                }
+            }  
+        }
+         
+        
+        if(runningJobs.size()){
+            // Check if any running jobs are finished:
+            for(std::vector<Job>::iterator runningJob = std::prev(runningJobs.end()); runningJob != std::prev(runningJobs.begin()); --runningJob)
+            {
+                if(currentTime == ((*runningJob).startTime + (*runningJob).trueRunTime))
+                {
+                    runningJobs.erase(runningJob);
+                    // Reset node resources: (CPU cores and memory allocated)
+                    nodeList.at((*runningJob).nodeId).coresAllocated -= (*runningJob).requestedCPUs;
+                    nodeList.at((*runningJob).nodeId).memoryAllocated -= (*runningJob).requestedMemory;
+                }
             }
         }
+        
 
+        //SORT JOBS FOR SJF SCHEDULING, SORT WITH THE SMALLEST VALUE RUNTIME (highest priority) LAST.
         std::cout << "Curr time: " << currentTime << " queue before sort.\n"; 
         printJobs(jobQueue);
         // Sort the queue based on runtime to have the shortest jobs considered first:
@@ -62,8 +55,10 @@ void runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t st
         // std::reverse after this to switch the order to descending
         printJobs(jobQueue);
         
-        // Finally, start jobs in the queue as resources permit:
-        for(std::vector<Job>::iterator waitingJob = jobQueue.end(); waitingJob != jobQueue.begin(); ++waitingJob)
+
+        std::vector<Job> waitingList;
+        // Finally, start jobs in the queue as resources permit
+        for(std::vector<Job>::iterator waitingJob = jobQueue.begin(); waitingJob != jobQueue.end(); ++waitingJob)
         {
             int selectedNodeId = checkNodeResources((*waitingJob), nodeList); 
             // If we have a node that is available, assign us to run on it:
@@ -74,8 +69,10 @@ void runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t st
                 (*waitingJob).startTime = currentTime;
                 selectedNode.coresAllocated += (*waitingJob).requestedCPUs;
                 selectedNode.memoryAllocated += (*waitingJob).requestedMemory;
-                jobQueue.erase(waitingJob);
+                //jobQueue.erase(waitingJob);
                 Job selectedJob = (*waitingJob);
+                selectedJob.nodeId = selectedNodeId;
+                runningJobs.push_back(selectedJob);
                 std::cout << "Running job " << selectedJob.jobNum << " with a submit time of: " << selectedJob.submitTime << std::endl;
                 std::cout << "Running job " << selectedJob.jobNum << " with a start time of: " << selectedJob.startTime << std::endl;
                 std::cout << "Running job " << selectedJob.jobNum << " with a requested job runtime of: " << selectedJob.requestedRunTime << std::endl;
@@ -83,8 +80,12 @@ void runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t st
             else 
             {
                 (*waitingJob).waitTime += 1;
+                //Add the rejected job to the waiting list. 
+                waitingList.push_back(*waitingJob);
             }
         }
+        //Recreate the queue with only the processes that are still waiting. 
+        jobQueue = waitingList;
         // std::cout << "Current time for the FCFS algorithm: " << currentTime << std::endl;
         // Increment to the next second: (step-increase in time)
         currentTime++;

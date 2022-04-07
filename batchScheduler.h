@@ -98,6 +98,9 @@ void printJobs(std::vector<Job> jobs);
 // In case of two or more files requiring the same function, 
 // just emplace one function once to avoid linker errors.
 // 2) Making isJobValid() return a boolean will create an infinite loop
+// 3) Iterating on the reverse since with erase() moves everything to the left to fill the hole
+// Alternative: increment prior to erasing
+ 
 
 // --------------------------
 // 3.0: Scheduling Algorithms
