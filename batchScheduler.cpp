@@ -20,21 +20,31 @@ auto main(int argc, char* argv[]) -> int
     time_point<system_clock, seconds> startTimePoint = time_point_cast<seconds>(system_clock::now());
     std::time_t startTime = std::chrono::system_clock::to_time_t(startTimePoint);
 
+    //Metrics to be updated after algorithm runs.
+    Metrics algorithmMetrics = Metrics(schedulingAlgorithm);
+
     // Generate nodes and jobs:
     int nodeCount = 3;    
     std::vector<Node> nodeList = buildNodes(nodeCount);
     std::vector<Job> jobList = buildPresetJobs(startTime);
-    // std::vector<Job> jobList = buildRandomizedJobs(jobCount, startTime);    
     
+    // std::vector<Job> jobList = buildRandomizedJobs(jobCount, startTime);    
     // Choose algorithm to run based on command line input:
     if(!schedulingAlgorithm.compare("FCFS")) 
     { 
-        runFCFS(nodeList, jobList, startTime);
+       finalizeAndOutputMetrics(runFCFS(nodeList, jobList, startTime));
     }
     else if(!schedulingAlgorithm.compare("SJF"))
     {
-        runSJF(nodeList, jobList, startTime);
+       finalizeAndOutputMetrics(runSJF(nodeList, jobList, startTime));
     }
+    else {
+        std::cout << "Invalid algorithm inputted, options are: FCFS, SJF\n";
+        exit(-1);
+    }
+
+   // finalizeAndOutputMetrics(algorithmMetrics);
+    
 }
 
 std::vector<Node> buildNodes(int nodeCount)
@@ -49,7 +59,7 @@ std::vector<Node> buildNodes(int nodeCount)
     return nodeList;
 }
 
-std::vector<Job> buildPresetJobs(std::time_t startTime)
+std::vector<Job> buildPresetJobs(timestamp startTime)
 {   
   std::vector<Job> jobList;
   jobList.push_back(Job(0, startTime + 1, 60, 30, 6, 6, 102400, 90000));
@@ -63,6 +73,23 @@ std::vector<Job> buildPresetJobs(std::time_t startTime)
 bool simulationFinished(std::vector<Job> jobList, std::vector<Job> jobQueue, std::vector<Job> runningJobs) 
 {
     return (jobList.empty() && jobQueue.empty() && runningJobs.empty());
+}
+
+void finalizeAndOutputMetrics(Metrics metrics)
+{
+
+    std::cout << "==================================\n" << "METRICS FOR SIMULATION: " << metrics.algorithm << "\n==================================\n";
+    //Compute additional metrics needed.
+    std::cout << "Max CPUs used: " << metrics.maxCPUsUsed << ", Max Memory used: " << metrics.maxMemoryUsed << "\n";
+    metrics.averageCPUsUsed = metrics.totalCPUsUsed / metrics.totalJobsRun;
+    metrics.averageMemoryUsed = metrics.totalMemoryUsed / metrics.totalJobsRun; 
+    std::cout << "Average CPUs in use simultaneously: " << metrics.averageCPUsUsed << ", Average Memory used simultaneously: " << metrics.averageMemoryUsed << "\n\n";
+    metrics.averageWait = metrics.totalWaitSum / metrics.totalJobsRun;
+    std::cout << "Total wait time: " << metrics.totalWaitSum << ", Average wait time: " << metrics.averageWait << ", Max Wait time: " << metrics.longestWait << "\n";
+    metrics.avgStretch = metrics.totalStretch / metrics.totalJobsRun;
+    std::cout << "Total stretch: " << metrics.totalStretch << ", Average stretch: " << metrics.avgStretch << ", Max Stretch : " << metrics.maxStretch <<"\n";
+    metrics.avgturnAroundTime = metrics.totalturnAroundTime / metrics.totalJobsRun;
+    std::cout << "Total Turnaroundtime: " << metrics.totalturnAroundTime << ", Average Turnaround time: " << metrics.avgturnAroundTime << ", Max Turnaround time : " << metrics.maxTurnAroundTime <<"\n";
 }
 
 /*

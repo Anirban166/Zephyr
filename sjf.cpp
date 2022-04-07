@@ -1,13 +1,16 @@
 #include "batchScheduler.h"
 
-void runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime)
+Metrics runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp startTime)
 {
     std::vector<Job> jobQueue;
     std::vector<Job> runningJobs;
+    std::vector<Job> finalJobList;
     std::cout << "Running the SJF scheduling algorithm." << std::endl;
-    std::time_t currentTime = startTime;
+    timestamp currentTime = startTime;
     int simIteration = 0;
     jobList = verifyJobs(jobList, nodeList);
+    Metrics sjfMetrics = Metrics("SJF");
+    sjfMetrics.totalJobsRun = jobList.size();
       
     while(!simulationFinished(jobList, jobQueue, runningJobs))
     {   
@@ -36,10 +39,14 @@ void runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t st
                 if(currentTime == ((*runningJob).startTime + (*runningJob).trueRunTime))
                 {
                     std::cout << "Job: " << (*runningJob).jobNum << " FINISHED RUNNING ON NODE: " << (*runningJob).nodeId << "\n";
-                    runningJobs.erase(runningJob);
+                    (*runningJob).stopTime = currentTime;
+                    
+                    finalJobList.push_back((*runningJob));
+                    
                     // Reset node resources: (CPU cores and memory allocated)
                     nodeList.at((*runningJob).nodeId).coresAllocated -= (*runningJob).requestedCPUs;
                     nodeList.at((*runningJob).nodeId).memoryAllocated -= (*runningJob).requestedMemory;
+                    runningJobs.erase(runningJob);
                 }
             }
         }
@@ -66,18 +73,54 @@ void runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t st
             // If we have a node that is available, assign us to run on it:
             if(selectedNodeId > -1)
             {
-            //     Node selectedNode = nodeList.at(selectedNodeId);
-                (*waitingJob).jobStatus = RUNNING;
-                (*waitingJob).startTime = currentTime;
-                nodeList.at(selectedNodeId).coresAllocated += (*waitingJob).requestedCPUs;
-                nodeList.at(selectedNodeId).memoryAllocated += (*waitingJob).requestedMemory;
-                //jobQueue.erase(waitingJob);
-                Job selectedJob = (*waitingJob);
+                Job selectedJob = (*waitingJob);                
+                selectedJob.startTime = currentTime;
+                selectedJob.waitTime = currentTime - selectedJob.submitTime;
+                
+                //Add this jobs waiting time to the total time.
+                sjfMetrics.totalWaitSum += selectedJob.waitTime;
+                if(sjfMetrics.longestWait < selectedJob.waitTime)
+                    sjfMetrics.longestWait = selectedJob.waitTime;
+                
+                //Stretch here (waitTime + trueRunTime)/trueRunTime
+                selectedJob.stretch = (double) (selectedJob.waitTime + selectedJob.trueRunTime) / (double) selectedJob.trueRunTime;
+                sjfMetrics.totalStretch += selectedJob.stretch;
+                if(sjfMetrics.maxStretch < selectedJob.stretch)
+                    sjfMetrics.maxStretch = selectedJob.stretch;
+                
+                //Note turnaround time and add to total.
+                selectedJob.turnAroundTime = (selectedJob.startTime + selectedJob.trueRunTime) - selectedJob.submitTime; // stopTime - submitTime
+                sjfMetrics.totalturnAroundTime += selectedJob.turnAroundTime;
+                if(sjfMetrics.maxTurnAroundTime < selectedJob.turnAroundTime)
+                    sjfMetrics.maxTurnAroundTime = selectedJob.turnAroundTime;
+
+                //Allocate resources for the waiting job
+                nodeList.at(selectedNodeId).coresAllocated += selectedJob.requestedCPUs;
+                nodeList.at(selectedNodeId).memoryAllocated += selectedJob.requestedMemory;
+                selectedJob.jobStatus = RUNNING;
                 selectedJob.nodeId = selectedNodeId;
                 runningJobs.push_back(selectedJob);
-                std::cout << "Running job " << selectedJob.jobNum << " with a submit time of: " << selectedJob.submitTime << std::endl;
+                std::cout << "Running job " << selectedJob.jobNum << " with a submit time of: " << selectedJob.submitTime << " on node: " << selectedNodeId << std::endl;
                 std::cout << "Running job " << selectedJob.jobNum << " with a start time of: " << selectedJob.startTime << std::endl;
                 std::cout << "Running job " << selectedJob.jobNum << " with a requested job runtime of: " << selectedJob.requestedRunTime << std::endl;
+
+                //Calculate cpus actually being used as well as the requested number.
+                int numCPUsInUse = 0;
+                unsigned long memoryInUse = 0;
+                for(std::vector<Job>::iterator runningJob = runningJobs.begin(); runningJob != runningJobs.end(); ++runningJob){
+                    Job currRunningJob = (*runningJob);
+                    numCPUsInUse += currRunningJob.usedCPUs;
+                    memoryInUse += currRunningJob.usedMemory;
+                }
+                //Build totals for metrics. 
+                sjfMetrics.totalCPUsUsed += numCPUsInUse;
+                if(numCPUsInUse > sjfMetrics.maxCPUsUsed)
+                    sjfMetrics.maxCPUsUsed = numCPUsInUse;
+                    
+                sjfMetrics.totalMemoryUsed += memoryInUse;
+                if(memoryInUse > sjfMetrics.maxMemoryUsed)
+                    sjfMetrics.maxMemoryUsed = memoryInUse;
+                    
             }
             else 
             {
@@ -93,5 +136,8 @@ void runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t st
         currentTime++;
         simIteration++;
     }
+    //Use finalJobList to calculate metrics. 
+    
+    return sjfMetrics;
     
 }

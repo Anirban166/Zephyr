@@ -2,7 +2,7 @@
 
 int checkNodeResources(Job waitingJob, std::vector<Node> nodeList)
 {
-    for(std::vector<Node>::iterator currentNode = nodeList.begin(); currentNode != nodeList.end(); ++currentNode)
+    for(std::vector<Node>::iterator currentNode = nodeList.begin(); currentNode != nodeList.end(); currentNode++)
     {
         Node currNodeObj = (*currentNode);
         int coresAvailable = currNodeObj.coreCount - currNodeObj.coresAllocated;
@@ -54,3 +54,4 @@ std::vector<Job> verifyJobs(std::vector<Job> jobList, std::vector<Node> nodeList
     }
     return jobList;
 }
+

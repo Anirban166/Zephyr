@@ -1,6 +1,6 @@
 #include "batchScheduler.h"
 
-void runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime)
+Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime)
 {
     std::vector<Job> jobQueue;
     std::vector<Job> runningJobs;
@@ -8,6 +8,7 @@ void runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t s
     std::time_t currentTime = startTime;
     int simIteration = 0;
     jobList = verifyJobs(jobList, nodeList);
+    Metrics fcfsMetrics = Metrics("FCFS");
       
     while(!simulationFinished(jobList, jobQueue, runningJobs))
     {   
@@ -91,4 +92,5 @@ void runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t s
         currentTime++;
         simIteration++;
     }
+    return fcfsMetrics;
 }

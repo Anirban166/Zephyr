@@ -25,13 +25,15 @@ class Job
       timestamp waitTime;                   // Difference between startTime and submitTime
       timestamp requestedRunTime;           // User requested (on job creation) job run time
       timestamp trueRunTime;                // Generated statically when creating job to simulate the amount of time actually needed
+      double stretch;
+      timestamp turnAroundTime;
       timestamp stopTime;                   // Sum of startTime and trueRunTime
       STATUS jobStatus = WAITING;           // Current state of the job (default is wait mode)
       int userId, groupId, precedingJobId;  // Identifiers for additional filtering
       double requestedCPUs, usedCPUs;       // Requested and actually used CPU cores
       double requestedMemory, usedMemory;   // Requested and actually used memory (GiB)
       // Actual runtime on each CPU: (1 CPU == trueRunTime, multiple CPUs or parallel core usage => take all the time measurements, get the average)
-      std::vector<timestamp> cpuTimes;
+      //std::vector<timestamp> cpuTimes;
 
       // Constructor:
       Job(int jobNum,
@@ -71,6 +73,32 @@ class Node
     }
 };
 
+class Metrics {
+  public:
+    std::string algorithm;
+    timestamp totalWaitSum = 0;
+    timestamp averageWait = 0;
+    timestamp longestWait = 0;
+    timestamp avgturnAroundTime = 0;
+    timestamp totalturnAroundTime = 0;
+    timestamp maxTurnAroundTime = 0;
+    double avgStretch = 0;
+    double totalStretch = 0;
+    double maxStretch = 0;
+    int totalCPUsUsed = 0;
+   // int totalCPUsReqd = 0;
+    int maxCPUsUsed = 0;
+    unsigned long totalMemoryUsed = 0;
+    unsigned long maxMemoryUsed = 0;
+    int averageCPUsUsed = 0;
+    unsigned long averageMemoryUsed = 0;
+    int totalJobsRun = 0; 
+      
+    Metrics(std::string algorithm){
+      this->algorithm = algorithm;
+    }
+};
+
 // ----------------------
 // 2.0: Utility Functions
 // ----------------------
@@ -93,6 +121,9 @@ bool simulationFinished(std::vector<Job> jobList, std::vector<Job> jobQueue, std
 // 2.6) Function to print jobs:
 void printJobs(std::vector<Job> jobs);
 
+Metrics runAlgorithm(std::string selectedAlgorithm);
+void finalizeAndOutputMetrics(Metrics metrics);
+
 // Notes:
 // 1) Keep definitions of utility functions in the required files
 // In case of two or more files requiring the same function, 
@@ -101,11 +132,10 @@ void printJobs(std::vector<Job> jobs);
 // 3) Iterating on the reverse since with erase() moves everything to the left to fill the hole
 // Alternative: increment prior to erasing
  
-
 // --------------------------
 // 3.0: Scheduling Algorithms
 // --------------------------
 // 3.1) Shortest Job First (SJF)
-void runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime);
+Metrics runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime);
 // 3.2) First Come First Serve (FCFS)
-void runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime);
+Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime);
