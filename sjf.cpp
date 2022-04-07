@@ -35,6 +35,7 @@ void runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t st
             {
                 if(currentTime == ((*runningJob).startTime + (*runningJob).trueRunTime))
                 {
+                    std::cout << "Job: " << (*runningJob).jobNum << " FINISHED RUNNING ON NODE: " << (*runningJob).nodeId << "\n";
                     runningJobs.erase(runningJob);
                     // Reset node resources: (CPU cores and memory allocated)
                     nodeList.at((*runningJob).nodeId).coresAllocated -= (*runningJob).requestedCPUs;
@@ -45,14 +46,15 @@ void runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t st
         
 
         //SORT JOBS FOR SJF SCHEDULING, SORT WITH THE SMALLEST VALUE RUNTIME (highest priority) LAST.
-        std::cout << "Curr time: " << currentTime << " queue before sort.\n"; 
-        printJobs(jobQueue);
+       // std::cout << "Curr time: " << currentTime << " queue before sort.\n"; 
+       // printJobs(jobQueue);
         // Sort the queue based on runtime to have the shortest jobs considered first:
         std::sort(jobQueue.begin(), jobQueue.end(), [](const auto& lhs, const auto& rhs)
         {
             return lhs.requestedRunTime < rhs.requestedRunTime;
         });
         // std::reverse after this to switch the order to descending
+        std::cout << "JOB QUEUE SORTED: \n";
         printJobs(jobQueue);
         
 
@@ -64,11 +66,11 @@ void runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t st
             // If we have a node that is available, assign us to run on it:
             if(selectedNodeId > -1)
             {
-                Node selectedNode = nodeList.at(selectedNodeId);
+            //     Node selectedNode = nodeList.at(selectedNodeId);
                 (*waitingJob).jobStatus = RUNNING;
                 (*waitingJob).startTime = currentTime;
-                selectedNode.coresAllocated += (*waitingJob).requestedCPUs;
-                selectedNode.memoryAllocated += (*waitingJob).requestedMemory;
+                nodeList.at(selectedNodeId).coresAllocated += (*waitingJob).requestedCPUs;
+                nodeList.at(selectedNodeId).memoryAllocated += (*waitingJob).requestedMemory;
                 //jobQueue.erase(waitingJob);
                 Job selectedJob = (*waitingJob);
                 selectedJob.nodeId = selectedNodeId;

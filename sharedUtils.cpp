@@ -31,9 +31,12 @@ int isJobValid(Job waitingJob, std::vector<Node> nodeList)
 void printJobs(std::vector<Job> jobs)
 {
     int count = 0;
+    std::cout << "[";
     for(std::vector<Job>::iterator currJob = jobs.begin(); currJob != jobs.end(); ++currJob){
-        std::cout << "Job " << count << ": " << (*currJob).jobNum << " start time: " << (*currJob).jobNum;
+        std::cout << count << "th job in list: " << (*currJob).jobNum << " start time: " << (*currJob).requestedRunTime << ",";
+        count++;
     }
+    std::cout << "]" << "\n";
 }
 
 std::vector<Job> verifyJobs(std::vector<Job> jobList, std::vector<Node> nodeList){

@@ -5,41 +5,59 @@ void runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t s
     std::vector<Job> jobQueue;
     std::vector<Job> runningJobs;
     std::cout << "Running the FCFS scheduling algorithm." << std::endl;
-    std::time_t currentTime = startTime;    
+    std::time_t currentTime = startTime;
+    int simIteration = 0;
+    jobList = verifyJobs(jobList, nodeList);
+      
     while(!simulationFinished(jobList, jobQueue, runningJobs))
-    {
-        // First check if any jobs are ready to be added to the queue: 
-        for(long unsigned int i = 0; i < jobList.size(); ++i)
-        {
-            Job currentJob = jobList.at(i);
-            // Check if it is possible to service this request at all: (based on the maximum resources we have available)
-            if(!isJobValid(currentJob, nodeList))
-            {   // Discard job if infeasible:
-                jobList.erase(jobList.begin() + i);
-            }
-            
-            // If the job is ready to submit right now, put it in the queue and remove it from joblist:
-            if(currentJob.submitTime == currentTime)
-            {
-                currentJob.jobStatus = QUEUED;
-                jobQueue.push_back(currentJob);
-                jobList.erase(jobList.begin() + i);    
-            }
-        }
+    {   
+       // std::cout << "FCFS ITERATION: " << simIteration << "\n";
 
-        // Check if any running jobs are finished:
-        for(std::vector<Job>::iterator runningJob = runningJobs.begin(); runningJob != runningJobs.end(); ++runningJob)
-        {
-            if(currentTime == ((*runningJob).startTime + (*runningJob).trueRunTime))
+        // First check if any jobs are ready to be added to the queue:
+        if(jobList.size())
+        {    
+            for(std::vector<Job>::iterator currentJobIter = std::prev(jobList.end()); currentJobIter != std::prev(jobList.begin()); --currentJobIter)
             {
-                runningJobs.erase(runningJob);
-                // Reset node resources: (CPU cores and memory allocated)
-                nodeList.at((*runningJob).nodeId).coresAllocated -= (*runningJob).requestedCPUs;
-                nodeList.at((*runningJob).nodeId).memoryAllocated -= (*runningJob).requestedMemory;
+                Job currentJob = *currentJobIter;
+                // If the job is ready to submit right now, put it in the queue and remove it from joblist:
+                if(currentJob.submitTime == currentTime)
+                {
+                    currentJob.jobStatus = QUEUED;
+                    jobQueue.push_back(currentJob);
+                    jobList.erase(currentJobIter);    
+                }
+            }  
+        }
+         
+        
+        if(runningJobs.size()){
+            // Check if any running jobs are finished:
+            for(std::vector<Job>::iterator runningJob = std::prev(runningJobs.end()); runningJob != std::prev(runningJobs.begin()); --runningJob)
+            {
+                if(currentTime == ((*runningJob).startTime + (*runningJob).trueRunTime))
+                {
+                    runningJobs.erase(runningJob);
+                    // Reset node resources: (CPU cores and memory allocated)
+                    nodeList.at((*runningJob).nodeId).coresAllocated -= (*runningJob).requestedCPUs;
+                    nodeList.at((*runningJob).nodeId).memoryAllocated -= (*runningJob).requestedMemory;
+                }
             }
         }
-     
-        // Finally, start jobs in the queue as resources permit:
+        
+
+        //SORT JOBS FOR FCFS SCHEDULING, SORT WITH THE SMALLEST VALUE RUNTIME (highest priority) LAST.
+        //std::cout << "Curr time: " << currentTime << " queue before sort.\n"; 
+        printJobs(jobQueue);
+        // Sort the queue based on runtime to have the shortest jobs considered first:
+        std::sort(jobQueue.begin(), jobQueue.end(), [](const auto& lhs, const auto& rhs)
+        {
+            return lhs.submitTime < rhs.submitTime;
+        });
+        // std::reverse after this to switch the order to descending
+        printJobs(jobQueue);
+        
+        std::vector<Job> waitingList;
+        // Finally, start jobs in the queue as resources permit
         for(std::vector<Job>::iterator waitingJob = jobQueue.begin(); waitingJob != jobQueue.end(); ++waitingJob)
         {
             int selectedNodeId = checkNodeResources((*waitingJob), nodeList); 
@@ -51,8 +69,10 @@ void runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t s
                 (*waitingJob).startTime = currentTime;
                 selectedNode.coresAllocated += (*waitingJob).requestedCPUs;
                 selectedNode.memoryAllocated += (*waitingJob).requestedMemory;
-                jobQueue.erase(waitingJob);
+                //jobQueue.erase(waitingJob);
                 Job selectedJob = (*waitingJob);
+                selectedJob.nodeId = selectedNodeId;
+                runningJobs.push_back(selectedJob);
                 std::cout << "Running job " << selectedJob.jobNum << " with a submit time of: " << selectedJob.submitTime << std::endl;
                 std::cout << "Running job " << selectedJob.jobNum << " with a start time of: " << selectedJob.startTime << std::endl;
                 std::cout << "Running job " << selectedJob.jobNum << " with a requested job runtime of: " << selectedJob.requestedRunTime << std::endl;
@@ -60,11 +80,15 @@ void runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t s
             else 
             {
                 (*waitingJob).waitTime += 1;
+                //Add the rejected job to the waiting list. 
+                waitingList.push_back(*waitingJob);
             }
         }
-            // std::cout << "Current time for the SJF algorithm: " << currentTime << std::endl;
-            // Increment to the next second: (step-increase in time)
-            currentTime++;
-        }
+        //Recreate the queue with only the processes that are still waiting. 
+        jobQueue = waitingList;
+        // std::cout << "Current time for the FCFS algorithm: " << currentTime << std::endl;
+        // Increment to the next second: (step-increase in time)
+        currentTime++;
+        simIteration++;
+    }
 }
-
