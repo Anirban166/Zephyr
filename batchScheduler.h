@@ -131,8 +131,14 @@ void finalizeAndOutputMetrics(Metrics metrics);
 // In case of two or more files requiring the same function, 
 // just emplace one function once to avoid linker errors.
 // 2) Making isJobValid() return a boolean will create an infinite loop
-// 3) Iterating on the reverse since with erase() moves everything to the left to fill the hole
-// Alternative: increment prior to erasing
+// 3) We are currently iterating on the reverse since erase() moves everything to the left to fill the hole.
+// Alternatives: 
+// (a) Increment prior to erasing: 
+// i.e., remove the increment/decrement from the loop and use jobList.erase(++currentJobIter);
+// (b) Using a loop index:
+// const std::size_t size = v.size();
+// for(std::size_t i = 0; i < size; ++i) v.erase(v[i]);
+// The ith element will remain the ith element this way (unlike the problem case where the iterator points to the next element, skipping past one)
  
 // --------------------------
 // 3.0: Scheduling Algorithms
