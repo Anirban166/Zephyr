@@ -25,15 +25,15 @@ class Job
       timestamp waitTime;                   // Difference between startTime and submitTime
       timestamp requestedRunTime;           // User requested (on job creation) job run time
       timestamp trueRunTime;                // Generated statically when creating job to simulate the amount of time actually needed
-      double stretch;
-      timestamp turnAroundTime;
+      double stretch;                       //
+      timestamp turnAroundTime;             // 
       timestamp stopTime;                   // Sum of startTime and trueRunTime
       STATUS jobStatus = WAITING;           // Current state of the job (default is wait mode)
       int userId, groupId, precedingJobId;  // Identifiers for additional filtering
       double requestedCPUs, usedCPUs;       // Requested and actually used CPU cores
       double requestedMemory, usedMemory;   // Requested and actually used memory (GiB)
       // Actual runtime on each CPU: (1 CPU == trueRunTime, multiple CPUs or parallel core usage => take all the time measurements, get the average)
-      //std::vector<timestamp> cpuTimes;
+      // std::vector<timestamp> cpuTimes;
 
       // Constructor:
       Job(int jobNum,
@@ -46,13 +46,13 @@ class Job
           double usedMemory)
          {
            this->jobNum = jobNum;
-           this->submitTime = submitTime;
+           this->usedCPUs = usedCPUs;    
+           this->usedMemory = usedMemory;                  
+           this->submitTime = submitTime; 
+           this->trueRunTime = trueRunTime;    
+           this->requestedCPUs = requestedCPUs;                            
+           this->requestedMemory = requestedMemory;           
            this->requestedRunTime = requestedRunTime;
-           this->trueRunTime = trueRunTime;
-           this->requestedCPUs = requestedCPUs;
-           this->usedCPUs = usedCPUs;
-           this->requestedMemory = requestedMemory;
-           this->usedMemory = usedMemory;
          }
 };
 // 1.2) Node Class
@@ -73,7 +73,8 @@ class Node
     }
 };
 
-class Metrics {
+class Metrics 
+{
   public:
     std::string algorithm;
     timestamp totalWaitSum = 0;
@@ -86,15 +87,16 @@ class Metrics {
     double totalStretch = 0;
     double maxStretch = 0;
     int totalCPUsUsed = 0;
-   // int totalCPUsReqd = 0;
+    // int totalCPUsReqd = 0;
     int maxCPUsUsed = 0;
     unsigned long totalMemoryUsed = 0;
     unsigned long maxMemoryUsed = 0;
     int averageCPUsUsed = 0;
     unsigned long averageMemoryUsed = 0;
     int totalJobsRun = 0; 
-      
-    Metrics(std::string algorithm){
+    // Constructor:  
+    Metrics(std::string algorithm)
+    {
       this->algorithm = algorithm;
     }
 };
@@ -114,11 +116,11 @@ int isJobValid(Job waitingJob, std::vector<Node> nodeList);
 // 2.4) Returns node ID for whichever node has the required resources for the job that requests it, 
 // otherwise if all nodes can't satisfy the resource requirements, it returns a -1:
 int checkNodeResources(Job waitingJob, std::vector<Node> nodeList);
-
+// 2.5) Function to verify the feasibility of jobs:
 std::vector<Job> verifyJobs(std::vector<Job> jobList, std::vector<Node> nodeList);
-// 2.5) Function to indicate the end of simulation, when the joblist and queues are empty at the very end:
+// 2.6) Function to indicate the end of simulation, when the joblist and queues are empty at the very end:
 bool simulationFinished(std::vector<Job> jobList, std::vector<Job> jobQueue, std::vector<Job> runningJobs);
-// 2.6) Function to print jobs:
+// 2.7) Function to print jobs:
 void printJobs(std::vector<Job> jobs);
 
 Metrics runAlgorithm(std::string selectedAlgorithm);

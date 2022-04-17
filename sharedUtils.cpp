@@ -24,7 +24,7 @@ int isJobValid(Job waitingJob, std::vector<Node> nodeList)
             return (*currentNode).nodeId;
         }   
     } 
-    std::cout << "Couldn't find a node with desired resources as requested (exceeds the maximum for all nodes)\n";
+    std::cout << "Couldn't find a node with desired resources as requested (exceeds the maximum for all nodes)!\n";
     return -1;   
 }
 

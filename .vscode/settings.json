@@ -75,6 +75,15 @@
         "sstream": "cpp",
         "string": "cpp",
         "string_view": "cpp",
-        "unordered_map": "cpp"
+        "unordered_map": "cpp",
+        "condition_variable": "cpp",
+        "deque": "cpp",
+        "numbers": "cpp",
+        "queue": "cpp",
+        "semaphore": "cpp",
+        "thread": "cpp",
+        "*.tcc": "cpp",
+        "memory_resource": "cpp",
+        "stop_token": "cpp"
     }
 }
