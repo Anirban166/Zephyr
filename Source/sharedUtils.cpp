@@ -20,23 +20,23 @@ int isJobValid(Job waitingJob, std::vector<Node> nodeList)
     {
         if((waitingJob.requestedCPUs <= (*currentNode).coreCount) && (waitingJob.requestedMemory <= (*currentNode).memoryAmount))
         {
-            std::cout << "Returning available node with id: " << (*currentNode).nodeId << " for job: " << waitingJob.jobNum << "\n";
+            print("Returning available node with id: ", (*currentNode).nodeId, " for job: ", waitingJob.jobNum, "\n");
             return (*currentNode).nodeId;
         }   
     } 
-    std::cout << "Couldn't find a node with desired resources as requested (exceeds the maximum for all nodes)!\n";
+    print("Couldn't find a node with desired resources as requested (exceeds the maximum for all nodes)!\n");
     return -1;   
 }
 
 void printJobs(std::vector<Job> jobs)
 {
     int count = 0;
-    std::cout << "[";
+    print("[");
     for(std::vector<Job>::iterator currJob = jobs.begin(); currJob != jobs.end(); ++currJob){
-        std::cout << count << "th job in list: " << (*currJob).jobNum << " req runtime: " << (*currJob).requestedRunTime << ",";
+        print(count, "th job in list: ", (*currJob).jobNum, " requires: ", (*currJob).requestedRunTime, " seconds,");
         count++;
     }
-    std::cout << "]" << "\n";
+    print("]\n");
 }
 
 std::vector<Job> verifyJobs(std::vector<Job> jobList, std::vector<Node> nodeList){
@@ -47,11 +47,10 @@ std::vector<Job> verifyJobs(std::vector<Job> jobList, std::vector<Node> nodeList
         // Check if it is possible to service this request at all: (based on the maximum resources we have available)
         if(isJobValid(currentJob, nodeList) == -1)
         {   
-            std::cout << "Erasing job: " << currentJob.jobNum << "\n";
+            print("Erasing job: ", currentJob.jobNum, "\n");
             // Discard job if infeasible:
             jobList.erase(currentJobIter);
         }
     }
     return jobList;
 }
-

@@ -4,14 +4,14 @@ auto main(int argc, char* argv[]) -> int
 {
     if(argc != 3)
     {
-        std::cout << "Please enter the following arguments:\n";  
-        std::cout << "The number of jobs to schedule.\n";
-        std::cout << "The scheduling algorithm to use.\n"; 
+        print("Please enter the following arguments:\n");  
+        print("The number of jobs to schedule.\n");
+        print("The scheduling algorithm to use.\n"); 
         exit(-1); 
     }    
-    std::cout << "The arguments you entered are:\n";
+    print("The arguments you entered are:\n");
     for(int i = 0; i < argc; ++i) 
-        std::cout << "Argument " << i << ": " << argv[i] << "\n";  
+        print("Argument ", i, ": ", argv[i], "\n");  
 
     // int jobCount = atoi(argv[1]);
     std::string schedulingAlgorithm = argv[2];
@@ -38,13 +38,12 @@ auto main(int argc, char* argv[]) -> int
     {
        finalizeAndOutputMetrics(runSJF(nodeList, jobList, startTime));
     }
-    else {
-        std::cout << "Invalid algorithm inputted, options are: FCFS, SJF\n";
+    else 
+    {
+        print("Invalid algorithm name! Current options include FCFS and SJF.\n");
         exit(-1);
     }
-
-   // finalizeAndOutputMetrics(algorithmMetrics);
-    
+    // finalizeAndOutputMetrics(algorithmMetrics);
 }
 
 std::vector<Node> buildNodes(int nodeCount)
@@ -77,19 +76,17 @@ bool simulationFinished(std::vector<Job> jobList, std::vector<Job> jobQueue, std
 
 void finalizeAndOutputMetrics(Metrics metrics)
 {
-
-    std::cout << "==================================\n" << "METRICS FOR SIMULATION: " << metrics.algorithm << "\n==================================\n";
-    //Compute additional metrics needed.
-    std::cout << "Max CPUs used: " << metrics.maxCPUsUsed << ", Max Memory used: " << metrics.maxMemoryUsed << "\n";
+    print("Metrics for simulation:\nAlgorithm used: ", metrics.algorithm, "\n");
+    print("Maximum number of CPUs used simultaneously: ", metrics.maxCPUsUsed, "\nMaximum amount of memory used simultaneously: ", metrics.maxMemoryUsed, " MiB\n");
     metrics.averageCPUsUsed = metrics.totalCPUsUsed / metrics.totalJobsRun;
     metrics.averageMemoryUsed = metrics.totalMemoryUsed / metrics.totalJobsRun; 
-    std::cout << "Average CPUs in use simultaneously: " << metrics.averageCPUsUsed << ", Average Memory used simultaneously: " << metrics.averageMemoryUsed << "\n\n";
+    print("Average CPUs in use simultaneously: ", metrics.averageCPUsUsed, "\nAverage amount of memory used simultaneously: ", metrics.averageMemoryUsed, " MiB\n");
     metrics.averageWait = metrics.totalWaitSum / metrics.totalJobsRun;
-    std::cout << "Total wait time: " << metrics.totalWaitSum << ", Average wait time: " << metrics.averageWait << ", Max Wait time: " << metrics.longestWait << "\n";
+    print("Total wait time: ", metrics.totalWaitSum, " seconds\nAverage wait time: ", metrics.averageWait, " seconds\nMaximum wait time: ", metrics.longestWait, " seconds\n");
     metrics.avgStretch = metrics.totalStretch / metrics.totalJobsRun;
-    std::cout << "Total stretch: " << metrics.totalStretch << ", Average stretch: " << metrics.avgStretch << ", Max Stretch : " << metrics.maxStretch <<"\n";
+    print("Total stretch: ", metrics.totalStretch, "\nAverage stretch: ", metrics.avgStretch, "\nMaximum stretch: ", metrics.maxStretch, "\n");
     metrics.avgturnAroundTime = metrics.totalturnAroundTime / metrics.totalJobsRun;
-    std::cout << "Total Turnaroundtime: " << metrics.totalturnAroundTime << ", Average Turnaround time: " << metrics.avgturnAroundTime << ", Max Turnaround time : " << metrics.maxTurnAroundTime <<"\n";
+    print("Total Turnaroundtime: ", metrics.totalturnAroundTime, " seconds\n Average Turnaround time: ", metrics.avgturnAroundTime, " seconds\n Maximum turnaround time: ", metrics.maxTurnAroundTime, " seconds\n");
 }
 
 /*

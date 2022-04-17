@@ -5,7 +5,7 @@ Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp 
     std::vector<Job> jobQueue;
     std::vector<Job> runningJobs;
     std::vector<Job> finalJobList;
-    std::cout << "Running the FCFS scheduling algorithm." << std::endl;
+    print("Running the FCFS scheduling algorithm.\n");
     timestamp currentTime = startTime;
     int simIteration = 0;
     jobList = verifyJobs(jobList, nodeList);
@@ -14,8 +14,7 @@ Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp 
       
     while(!simulationFinished(jobList, jobQueue, runningJobs))
     {   
-        std::cout << "FCFS scheduling iteration number: " << simIteration << "\n";
-
+        print("FCFS scheduling iteration number: ", simIteration, "\n");
         // First check if any jobs are ready to be added to the queue:
         if(jobList.size())
         {    
@@ -31,7 +30,6 @@ Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp 
                 }
             }  
         }
-
            // Sort jobs for fcfs scheduling based on the submit times:
           // std::cout << "Current time: " << currentTime << " queue before sort.\n"; 
          // printJobs(jobQueue);
@@ -42,7 +40,7 @@ Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp 
         });
         // Reversing items in container to switch the order to descending:
         std::reverse(jobQueue.begin(), jobQueue.end());
-        std::cout << "Sorted job queue: \n";
+        print("Sorted job queue:\n");
         printJobs(jobQueue);
          
         if(runningJobs.size())
@@ -52,7 +50,7 @@ Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp 
             {
                 if(currentTime == ((*runningJob).startTime + (*runningJob).trueRunTime))
                 {
-                    std::cout << "Job: " << (*runningJob).jobNum << " finished running on node: " << (*runningJob).nodeId << "\n";
+                    print("Job: ", (*runningJob).jobNum, " finished running on node: ", (*runningJob).nodeId, "\n");
                     (*runningJob).stopTime = currentTime;
                     
                     finalJobList.push_back((*runningJob));
@@ -79,20 +77,17 @@ Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp 
                 
                 // Add this job's waiting time to the total time:
                 fcfsMetrics.totalWaitSum += selectedJob.waitTime;
-                if(fcfsMetrics.longestWait < selectedJob.waitTime)
-                    fcfsMetrics.longestWait = selectedJob.waitTime;
+                fcfsMetrics.longestWait = (fcfsMetrics.longestWait < selectedJob.waitTime) ? selectedJob.waitTime : fcfsMetrics.longestWait;    
                 
                 // Collect stretch metrics:
                 selectedJob.stretch = (double) (selectedJob.waitTime + selectedJob.trueRunTime) / (double) selectedJob.trueRunTime;
                 fcfsMetrics.totalStretch += selectedJob.stretch;
-                if(fcfsMetrics.maxStretch < selectedJob.stretch)
-                    fcfsMetrics.maxStretch = selectedJob.stretch;
+                fcfsMetrics.maxStretch = (fcfsMetrics.maxStretch < selectedJob.stretch) ? selectedJob.stretch : fcfsMetrics.maxStretch;
                 
                 // Compute turnaround time and add to total:
-                selectedJob.turnAroundTime = (selectedJob.startTime + selectedJob.trueRunTime) - selectedJob.submitTime; // stopTime - submitTime
+                selectedJob.turnAroundTime = (selectedJob.startTime + selectedJob.trueRunTime) - selectedJob.submitTime;
                 fcfsMetrics.totalturnAroundTime += selectedJob.turnAroundTime;
-                if(fcfsMetrics.maxTurnAroundTime < selectedJob.turnAroundTime)
-                    fcfsMetrics.maxTurnAroundTime = selectedJob.turnAroundTime;
+                fcfsMetrics.maxTurnAroundTime = (fcfsMetrics.maxTurnAroundTime < selectedJob.turnAroundTime) ? selectedJob.turnAroundTime : fcfsMetrics.maxTurnAroundTime;
 
                 // Allocate resources for the waiting job:
                 nodeList.at(selectedNodeId).coresAllocated += selectedJob.requestedCPUs;
@@ -100,9 +95,9 @@ Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp 
                 selectedJob.jobStatus = RUNNING;
                 selectedJob.nodeId = selectedNodeId;
                 runningJobs.push_back(selectedJob);
-                std::cout << "Running job " << selectedJob.jobNum << " with a submit time of: " << selectedJob.submitTime << " on node: " << selectedNodeId << std::endl;
-                std::cout << "Running job " << selectedJob.jobNum << " with a start time of: " << selectedJob.startTime << std::endl;
-                std::cout << "Running job " << selectedJob.jobNum << " with a requested job runtime of: " << selectedJob.requestedRunTime << std::endl;
+                print("Running job ", selectedJob.jobNum, " with a submit time of: ", selectedJob.submitTime, " seconds on node: ", selectedNodeId, "\n");
+                print("Running job ", selectedJob.jobNum, " with a start time of: ", selectedJob.startTime, " seconds\n");
+                print("Running job ", selectedJob.jobNum, " with a requested job runtime of: ", selectedJob.requestedRunTime, " seconds\n");
 
                 // Calculate the core count actually being used, in addition to the requested number:
                 int numCPUsInUse = 0;
@@ -116,13 +111,9 @@ Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp 
 
                 // Sum up and obtain the totals for our metrics:
                 fcfsMetrics.totalCPUsUsed += numCPUsInUse;
-                if(numCPUsInUse > fcfsMetrics.maxCPUsUsed)
-                    fcfsMetrics.maxCPUsUsed = numCPUsInUse;
-                    
+                fcfsMetrics.maxCPUsUsed = (numCPUsInUse > fcfsMetrics.maxCPUsUsed) ? numCPUsInUse : fcfsMetrics.maxCPUsUsed;
                 fcfsMetrics.totalMemoryUsed += memoryInUse;
-                if(memoryInUse > fcfsMetrics.maxMemoryUsed)
-                    fcfsMetrics.maxMemoryUsed = memoryInUse;
-                    
+                fcfsMetrics.maxMemoryUsed = (memoryInUse > fcfsMetrics.maxMemoryUsed) ? memoryInUse : fcfsMetrics.maxMemoryUsed;
             }
             else 
             {

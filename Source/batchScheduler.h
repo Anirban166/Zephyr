@@ -11,6 +11,11 @@
 using namespace std::chrono;
 using timestamp = std::time_t;
 enum STATUS { RUNNING, WAITING, QUEUED, CANCELLED };
+template<typename ...T>
+void print(T&&... args) 
+{
+    ((std::cout << args), ...);
+}
 // --------------
 // 1.0: Classes
 // --------------

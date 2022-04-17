@@ -15,7 +15,6 @@ Metrics runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp s
     while(!simulationFinished(jobList, jobQueue, runningJobs))
     {   
         std::cout << "SJF scheduling iteration number: " << simIteration << "\n";
-
         // First check if any jobs are ready to be added to the queue:
         if(jobList.size())
         {    
@@ -51,7 +50,6 @@ Metrics runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp s
                 }
             }
         }
-        
            // Sort jobs in the queue for sjf scheduling based on the requested run times:
           // std::cout << "Current time: " << currentTime << " queue before sort.\n"; 
          // printJobs(jobQueue);
@@ -77,20 +75,17 @@ Metrics runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp s
                 
                 // Add this job's waiting time to the total time:
                 sjfMetrics.totalWaitSum += selectedJob.waitTime;
-                if(sjfMetrics.longestWait < selectedJob.waitTime)
-                    sjfMetrics.longestWait = selectedJob.waitTime;
+                sjfMetrics.longestWait = (sjfMetrics.longestWait < selectedJob.waitTime) ? selectedJob.waitTime : sjfMetrics.longestWait;    
                 
                 // Collect stretch metrics:
                 selectedJob.stretch = (double) (selectedJob.waitTime + selectedJob.trueRunTime) / (double) selectedJob.trueRunTime;
                 sjfMetrics.totalStretch += selectedJob.stretch;
-                if(sjfMetrics.maxStretch < selectedJob.stretch)
-                    sjfMetrics.maxStretch = selectedJob.stretch;
+                sjfMetrics.maxStretch = (sjfMetrics.maxStretch < selectedJob.stretch) ? selectedJob.stretch : sjfMetrics.maxStretch;
                 
                 // Compute turnaround time and add to total:
-                selectedJob.turnAroundTime = (selectedJob.startTime + selectedJob.trueRunTime) - selectedJob.submitTime; // stopTime - submitTime
+                selectedJob.turnAroundTime = (selectedJob.startTime + selectedJob.trueRunTime) - selectedJob.submitTime;
                 sjfMetrics.totalturnAroundTime += selectedJob.turnAroundTime;
-                if(sjfMetrics.maxTurnAroundTime < selectedJob.turnAroundTime)
-                    sjfMetrics.maxTurnAroundTime = selectedJob.turnAroundTime;
+                sjfMetrics.maxTurnAroundTime = (sjfMetrics.maxTurnAroundTime < selectedJob.turnAroundTime) ? selectedJob.turnAroundTime : sjfMetrics.maxTurnAroundTime;
 
                 // Allocate resources for the waiting job:
                 nodeList.at(selectedNodeId).coresAllocated += selectedJob.requestedCPUs;
@@ -111,15 +106,12 @@ Metrics runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp s
                     numCPUsInUse += currRunningJob.usedCPUs;
                     memoryInUse += currRunningJob.usedMemory;
                 }
+
                 // Sum up and obtain the totals for our metrics:
                 sjfMetrics.totalCPUsUsed += numCPUsInUse;
-                if(numCPUsInUse > sjfMetrics.maxCPUsUsed)
-                    sjfMetrics.maxCPUsUsed = numCPUsInUse;
-                    
+                sjfMetrics.maxCPUsUsed = (numCPUsInUse > sjfMetrics.maxCPUsUsed) ? numCPUsInUse : sjfMetrics.maxCPUsUsed;
                 sjfMetrics.totalMemoryUsed += memoryInUse;
-                if(memoryInUse > sjfMetrics.maxMemoryUsed)
-                    sjfMetrics.maxMemoryUsed = memoryInUse;
-                    
+                sjfMetrics.maxMemoryUsed = (memoryInUse > sjfMetrics.maxMemoryUsed) ? memoryInUse : sjfMetrics.maxMemoryUsed;    
             }
             else 
             {
