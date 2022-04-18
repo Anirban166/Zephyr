@@ -23,21 +23,20 @@ void print(T&&... args)
 class Job 
 {
     public:
-      int jobNum;                           // Unique job identifier
-      int nodeId;                           // Node at which the job is running (multiple jobs can have one nodeId)
-      timestamp submitTime;                 // Time the job was submitted by the user 
-      timestamp startTime;                  // Time the job actually starts running on CPU(s) 
-      timestamp waitTime;                   // Difference between startTime and submitTime
-      timestamp requestedRunTime;           // User requested (on job creation) job run time
-      timestamp trueRunTime;                // Generated statically when creating job to simulate the amount of time actually needed
-      double stretch;                       //
-      timestamp turnAroundTime;             // 
-      timestamp stopTime;                   // Sum of startTime and trueRunTime
-      STATUS jobStatus = WAITING;           // Current state of the job (default is wait mode)
-      int userId, groupId, precedingJobId;  // Identifiers for additional filtering
-      double requestedCPUs, usedCPUs;       // Requested and actually used CPU cores
+      int jobNum;                                       // Unique job identifier
+      int nodeID;                                      // Node at which the job is running (multiple jobs can have one nodeId)
+      double stretch;                                 // Slowdown (wait time + run time)/runtime
+      timestamp waitTime;                            // Difference between startTime and submitTime                           //      
+      timestamp stopTime;                           // Sum of startTime and trueRunTime
+      timestamp startTime;                         // Time the job actually starts running on CPU(s)       
+      timestamp submitTime;                       // Time the job was submitted by the user       
+      timestamp trueRunTime;                     // Generated statically when creating job to simulate the amount of time actually needed      
+      timestamp turnAroundTime;                 // Difference between the times of job submission and completion      
+      timestamp requestedRunTime;              // User requested (on job creation) job run time      
+      STATUS jobStatus = WAITING;             // Current state of the job (default is wait mode)
+      double requestedCPUs, usedCPUs;        // Requested and actually used CPU cores
       double requestedMemory, usedMemory;   // Requested and actually used memory (GiB)
-      // Actual runtime on each CPU: (1 CPU == trueRunTime, multiple CPUs or parallel core usage => take all the time measurements, get the average)
+      int userId, groupId, precedingJobId; // Identifiers for additional filtering      
       // std::vector<timestamp> cpuTimes;
 
       // Constructor:
@@ -64,20 +63,20 @@ class Job
 class Node 
 {
   public:
-    int nodeId;                   // Node identifier
+    int nodeID;                   // Node identifier
     int coreCount;               // Total cores in the node
     int memoryAmount;           // Total memory in the node (in GiB)
     int coresAllocated = 0;    // Cores used by a job (constrained by above parameters)
     int memoryAllocated = 0;  // Memory used by a job (constrained by above parameters)
     // Constructor:
-    Node(int nodeId, int coreCount, int memoryAmount)
+    Node(int nodeID, int coreCount, int memoryAmount)
     {
-      this->nodeId = nodeId;
+      this->nodeID = nodeID;
       this->coreCount = coreCount;
       this->memoryAmount = memoryAmount;
     }
 };
-
+// 1.2) Metrics Class
 class Metrics 
 {
   public:

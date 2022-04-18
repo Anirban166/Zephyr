@@ -30,10 +30,9 @@ Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp 
                 }
             }  
         }
-           // Sort jobs for fcfs scheduling based on the submit times:
+           // Sort jobs based on the submit times for FCFS:
           // std::cout << "Current time: " << currentTime << " queue before sort.\n"; 
          // printJobs(jobQueue);
-        // Sort the queue based on runtime to have the shortest jobs considered first:
         std::sort(jobQueue.begin(), jobQueue.end(), [](const auto& lhs, const auto& rhs)
         {
             return lhs.submitTime > rhs.submitTime;
@@ -50,14 +49,13 @@ Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp 
             {
                 if(currentTime == ((*runningJob).startTime + (*runningJob).trueRunTime))
                 {
-                    print("Job: ", (*runningJob).jobNum, " finished running on node: ", (*runningJob).nodeId, "\n");
+                    print("Job: ", (*runningJob).jobNum, " finished running on node: ", (*runningJob).nodeID, "\n");
                     (*runningJob).stopTime = currentTime;
-                    
                     finalJobList.push_back((*runningJob));
                     
                     // Reset node resources: (CPU cores and memory allocated)
-                    nodeList.at((*runningJob).nodeId).coresAllocated -= (*runningJob).requestedCPUs;
-                    nodeList.at((*runningJob).nodeId).memoryAllocated -= (*runningJob).requestedMemory;
+                    nodeList.at((*runningJob).nodeID).coresAllocated -= (*runningJob).requestedCPUs;
+                    nodeList.at((*runningJob).nodeID).memoryAllocated -= (*runningJob).requestedMemory;
                     runningJobs.erase(runningJob);
                 }
             }
@@ -67,9 +65,9 @@ Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp 
         // Finally, start jobs in the queue as resources permit:
         for(std::vector<Job>::iterator waitingJob = jobQueue.begin(); waitingJob != jobQueue.end(); ++waitingJob)
         {
-            int selectedNodeId = checkNodeResources((*waitingJob), nodeList); 
+            int selectedNodeID = checkNodeResources((*waitingJob), nodeList); 
             // If we have a node that is available, assign the waiting job to run on it:
-            if(selectedNodeId > -1)
+            if(selectedNodeID > -1)
             {
                 Job selectedJob = (*waitingJob);                
                 selectedJob.startTime = currentTime;
@@ -90,12 +88,12 @@ Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp 
                 fcfsMetrics.maxTurnAroundTime = (fcfsMetrics.maxTurnAroundTime < selectedJob.turnAroundTime) ? selectedJob.turnAroundTime : fcfsMetrics.maxTurnAroundTime;
 
                 // Allocate resources for the waiting job:
-                nodeList.at(selectedNodeId).coresAllocated += selectedJob.requestedCPUs;
-                nodeList.at(selectedNodeId).memoryAllocated += selectedJob.requestedMemory;
+                nodeList.at(selectedNodeID).coresAllocated += selectedJob.requestedCPUs;
+                nodeList.at(selectedNodeID).memoryAllocated += selectedJob.requestedMemory;
                 selectedJob.jobStatus = RUNNING;
-                selectedJob.nodeId = selectedNodeId;
+                selectedJob.nodeID = selectedNodeID;
                 runningJobs.push_back(selectedJob);
-                print("Running job ", selectedJob.jobNum, " with a submit time of: ", selectedJob.submitTime, " seconds on node: ", selectedNodeId, "\n");
+                print("Running job ", selectedJob.jobNum, " with a submit time of: ", selectedJob.submitTime, " seconds on node: ", selectedNodeID, "\n");
                 print("Running job ", selectedJob.jobNum, " with a start time of: ", selectedJob.startTime, " seconds\n");
                 print("Running job ", selectedJob.jobNum, " with a requested job runtime of: ", selectedJob.requestedRunTime, " seconds\n");
 

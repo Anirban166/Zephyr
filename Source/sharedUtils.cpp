@@ -9,7 +9,7 @@ int checkNodeResources(Job waitingJob, std::vector<Node> nodeList)
         int memoryAvailable = currNodeObj.memoryAmount - currNodeObj.memoryAllocated;
 
         if((waitingJob.requestedCPUs <= coresAvailable) && (waitingJob.requestedMemory <= memoryAvailable))
-            return (*currentNode).nodeId;    
+            return (*currentNode).nodeID;    
     } 
     return -1;   
 }
@@ -20,8 +20,8 @@ int isJobValid(Job waitingJob, std::vector<Node> nodeList)
     {
         if((waitingJob.requestedCPUs <= (*currentNode).coreCount) && (waitingJob.requestedMemory <= (*currentNode).memoryAmount))
         {
-            print("Returning available node with id: ", (*currentNode).nodeId, " for job: ", waitingJob.jobNum, "\n");
-            return (*currentNode).nodeId;
+            print("Returning available node with id: ", (*currentNode).nodeID, " for job: ", waitingJob.jobNum, "\n");
+            return (*currentNode).nodeID;
         }   
     } 
     print("Couldn't find a node with desired resources as requested (exceeds the maximum for all nodes)!\n");

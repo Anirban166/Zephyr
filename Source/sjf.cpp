@@ -5,7 +5,7 @@ Metrics runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp s
     std::vector<Job> jobQueue;
     std::vector<Job> runningJobs;
     std::vector<Job> finalJobList;
-    std::cout << "Running the SJF scheduling algorithm." << std::endl;
+    print("Running the SJF scheduling algorithm.\n");
     timestamp currentTime = startTime;
     int simIteration = 0;
     jobList = verifyJobs(jobList, nodeList);
@@ -14,7 +14,7 @@ Metrics runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp s
       
     while(!simulationFinished(jobList, jobQueue, runningJobs))
     {   
-        std::cout << "SJF scheduling iteration number: " << simIteration << "\n";
+        print("SJF scheduling iteration number: ", simIteration, "\n");
         // First check if any jobs are ready to be added to the queue:
         if(jobList.size())
         {    
@@ -38,19 +38,18 @@ Metrics runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp s
             {
                 if(currentTime == ((*runningJob).startTime + (*runningJob).trueRunTime))
                 {
-                    std::cout << "Job: " << (*runningJob).jobNum << " finished running on node: " << (*runningJob).nodeId << "\n";
+                    print("Job: ", (*runningJob).jobNum, " finished running on node: ", (*runningJob).nodeID, "\n");
                     (*runningJob).stopTime = currentTime;
-                    
                     finalJobList.push_back((*runningJob));
                     
                     // Reset node resources: (CPU cores and memory allocated)
-                    nodeList.at((*runningJob).nodeId).coresAllocated -= (*runningJob).requestedCPUs;
-                    nodeList.at((*runningJob).nodeId).memoryAllocated -= (*runningJob).requestedMemory;
+                    nodeList.at((*runningJob).nodeID).coresAllocated -= (*runningJob).requestedCPUs;
+                    nodeList.at((*runningJob).nodeID).memoryAllocated -= (*runningJob).requestedMemory;
                     runningJobs.erase(runningJob);
                 }
             }
         }
-           // Sort jobs in the queue for sjf scheduling based on the requested run times:
+           // Sort jobs in the queue based on the requested run times for SJF:
           // std::cout << "Current time: " << currentTime << " queue before sort.\n"; 
          // printJobs(jobQueue);
         std::sort(jobQueue.begin(), jobQueue.end(), [](const auto& lhs, const auto& rhs)
@@ -65,9 +64,9 @@ Metrics runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp s
         // Finally, start jobs in the queue as resources permit:
         for(std::vector<Job>::iterator waitingJob = jobQueue.begin(); waitingJob != jobQueue.end(); ++waitingJob)
         {
-            int selectedNodeId = checkNodeResources((*waitingJob), nodeList); 
+            int selectedNodeID = checkNodeResources((*waitingJob), nodeList); 
             // If we have a node that is available, assign the waiting job to run on it:
-            if(selectedNodeId > -1)
+            if(selectedNodeID > -1)
             {
                 Job selectedJob = (*waitingJob);                
                 selectedJob.startTime = currentTime;
@@ -88,14 +87,14 @@ Metrics runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp s
                 sjfMetrics.maxTurnAroundTime = (sjfMetrics.maxTurnAroundTime < selectedJob.turnAroundTime) ? selectedJob.turnAroundTime : sjfMetrics.maxTurnAroundTime;
 
                 // Allocate resources for the waiting job:
-                nodeList.at(selectedNodeId).coresAllocated += selectedJob.requestedCPUs;
-                nodeList.at(selectedNodeId).memoryAllocated += selectedJob.requestedMemory;
+                nodeList.at(selectedNodeID).coresAllocated += selectedJob.requestedCPUs;
+                nodeList.at(selectedNodeID).memoryAllocated += selectedJob.requestedMemory;
                 selectedJob.jobStatus = RUNNING;
-                selectedJob.nodeId = selectedNodeId;
+                selectedJob.nodeID = selectedNodeID;
                 runningJobs.push_back(selectedJob);
-                std::cout << "Running job " << selectedJob.jobNum << " with a submit time of: " << selectedJob.submitTime << " on node: " << selectedNodeId << std::endl;
-                std::cout << "Running job " << selectedJob.jobNum << " with a start time of: " << selectedJob.startTime << std::endl;
-                std::cout << "Running job " << selectedJob.jobNum << " with a requested job runtime of: " << selectedJob.requestedRunTime << std::endl;
+                print("Running job ", selectedJob.jobNum, " with a submit time of: ", selectedJob.submitTime, " on node: ", selectedNodeID, "\n");
+                print("Running job ", selectedJob.jobNum, " with a start time of: ", selectedJob.startTime, "\n");
+                print("Running job ", selectedJob.jobNum, " with a requested job runtime of: ", selectedJob.requestedRunTime, "\n");
 
                 // Calculate the core count actually being used, in addition to the requested number:
                 int numCPUsInUse = 0;
