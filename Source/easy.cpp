@@ -2,7 +2,7 @@
 
 Metrics runEASY(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp startTime)
 {
-    std::ofstream outputfile("filename.txt", std::ios::trunc);
+    std::ofstream outputfile("EASYOutput.txt", std::ios::trunc);
     const int NO_JOB_RESERVING = -1;
     int reservedJobNum = NO_JOB_RESERVING;
     std::vector<Job> jobQueue;

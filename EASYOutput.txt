@@ -4,8 +4,8 @@ ReservedJobNum: -1
 Sorted job queue: EASY scheduling iteration number: 1
 ReservedJobNum: -1
 Adding job num: 0 to queue
-Sorted job queue: Running job 0 with a submit time of: 1651805170 seconds on node: 0
-Running job 0 with a start time of: 1651805170 seconds
+Sorted job queue: Running job 0 with a submit time of: 1651813823 seconds on node: 0
+Running job 0 with a start time of: 1651813823 seconds
 Running job 0 with a requested job runtime of: 60 seconds
 EASY scheduling iteration number: 2
 ReservedJobNum: -1
@@ -29,8 +29,8 @@ Sorted job queue: Time taken by job 0: 5
 =====================
 Job 3 Can finish in time while job: 1 is reserving a runtime slot!
 =====================
-Running job 3 with a submit time of: 1651805175 seconds on node: 0
-Running job 3 with a start time of: 1651805175 seconds
+Running job 3 with a submit time of: 1651813828 seconds on node: 0
+Running job 3 with a start time of: 1651813828 seconds
 Running job 3 with a requested job runtime of: 20 seconds
 EASY scheduling iteration number: 7
 ReservedJobNum: 1
@@ -131,8 +131,8 @@ EASY scheduling iteration number: 31
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 0: 30
 Job: 0 finished running on node: 0
-Running job 1 with a submit time of: 1651805172 seconds on node: 0
-Running job 1 with a start time of: 1651805200 seconds
+Running job 1 with a submit time of: 1651813825 seconds on node: 0
+Running job 1 with a start time of: 1651813853 seconds
 Running job 1 with a requested job runtime of: 120 seconds
 EASY scheduling iteration number: 32
 ReservedJobNum: 1
@@ -435,8 +435,8 @@ EASY scheduling iteration number: 131
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 100
 Job: 1 finished running on node: 0
-Running job 2 with a submit time of: 1651805175 seconds on node: 0
-Running job 2 with a start time of: 1651805300 seconds
+Running job 2 with a submit time of: 1651813828 seconds on node: 0
+Running job 2 with a start time of: 1651813953 seconds
 Running job 2 with a requested job runtime of: 50 seconds
 EASY scheduling iteration number: 132
 ReservedJobNum: 4
@@ -592,8 +592,8 @@ EASY scheduling iteration number: 182
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 51
 Job: 2 killed due to time limit on node: 0
-Running job 4 with a submit time of: 1651805177 seconds on node: 0
-Running job 4 with a start time of: 1651805351 seconds
+Running job 4 with a submit time of: 1651813830 seconds on node: 0
+Running job 4 with a start time of: 1651814004 seconds
 Running job 4 with a requested job runtime of: 80 seconds
 EASY scheduling iteration number: 183
 ReservedJobNum: 4

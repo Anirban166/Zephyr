@@ -1,0 +1,5 @@
+make --dry-run --keep-going --print-directory
+make: Entering directory `/Users/anirban166/Zephyr'
+make: `test.bin' is up to date.
+make: Leaving directory `/Users/anirban166/Zephyr'
+ 

@@ -131,13 +131,16 @@ int checkNodeResources(Job waitingJob, std::vector<Node> nodeList);
 std::vector<Job> verifyJobs(std::vector<Job> jobList, std::vector<Node> nodeList);
 // 2.6) Function to indicate the end of simulation, when the joblist and queues are empty at the very end:
 bool simulationFinished(std::vector<Job> jobList, std::vector<Job> jobQueue, std::vector<Job> runningJobs);
-// 2.7) Function to print jobs:
+// 2.7) Functions to print stuff:
+// 2.7.1) Function to print jobs:
 void printJobs(std::vector<Job> jobs);
-
-void finalizeAndOutputMetrics(Metrics metrics);
-Metrics runAlgorithm(std::string selectedAlgorithm);
-bool canFinishBeforeShadow(timestamp shadowTime, timestamp reqRuntime, timestamp currentTime);
 // void printJobsToFile(std::vector<Job> jobs, std::ofstream file);
+// 2.7.2) Function to print the finalized (post operations such as taking the average) metrics that we are concerned with:
+void finalizeAndOutputMetrics(Metrics metrics);
+// 2.8) Function to run the input scheduling algorithm and return the metrics for the simulated run of the selected algorithm:
+Metrics runAlgorithm(std::string selectedAlgorithm);
+// 2.9) Function to indicate if a job can finish before the time at which the first job in the queue finishes execution:
+bool canFinishBeforeShadow(timestamp shadowTime, timestamp reqRuntime, timestamp currentTime);
 
 // Notes:
 // 1) Keep definitions of utility functions in the required files
