@@ -5,13 +5,9 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
 
- 
 # This program built for i386-apple-darwin11.3.0
- 
-make: *** No rule to make target `all'.  Stop.
 
-
-# Make data base, printed on Thu May  5 22:24:34 2022
+# Make data base, printed on Fri May  6 00:07:06 2022
 
 # Variables
 
@@ -37,7 +33,7 @@ SHELL = /bin/sh
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
 _ = /usr/bin/make
-# makefile (from `makefile', line 3)
+# makefile (from `makefile', line 4)
 CFLAGS = -Wall -g -std=c++17 -Iinclude
 # makefile (from `makefile', line 1)
 MAKEFILE_LIST :=  makefile
@@ -47,20 +43,20 @@ VSCODE_VERBOSE_LOGGING = true
 __CFBundleIdentifier = com.microsoft.VSCode
 # environment
 INFOPATH = /opt/homebrew/share/info:
+# makefile (from `makefile', line 3)
+ALGOS = ./Source/Algorithms/
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/9_/qc989n050_d2sbtw92scjshr0000gn/T/vscode-ipc-16516449-1d6a-4c4f-a65d-e0ffd35415b0.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/9_/qc989n050_d2sbtw92scjshr0000gn/T/vscode-ipc-e84cbbb6-db28-4fbc-9d5e-4e058a1927f5.sock
 # environment
 VSCODE_CWD = /
 # environment
-PATH = /opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Frameworks/Mono.framework/Versions/Current/Commands
+PATH = /opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
 # environment
 VSCODE_LOG_STACK = false
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # default
 .FEATURES := target-specific order-only second-expansion else-if archives jobserver check-symlink
-# makefile (from `makefile', line 2)
-DIR = ./Source/
 # environment
 SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.jsf3Ch1Wu3/Listeners
 # automatic
@@ -68,7 +64,6 @@ SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.jsf3Ch1Wu3/Listeners
 # environment
 VSCODE_PIPE_LOGGING = true
 # environment
- 
 PWD = /Users/anirban166/Zephyr
 # environment
 HOMEBREW_CELLAR = /opt/homebrew/Cellar
@@ -77,17 +72,17 @@ ORIGINAL_XDG_CURRENT_DESKTOP = undefined
 # environment
 MANPATH = /opt/homebrew/share/man:
 # environment
-VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
+VSCODE_AMD_ENTRYPOINT = vs/workbench/services/extensions/node/extensionHostProcess
 # environment
 HOME = /Users/anirban166
 # default
 MAKEFILEPATH = $(shell /usr/bin/xcode-select -print-path 2>/dev/null || echo /Developer)/Makefiles
 # environment
-VSCODE_CODE_CACHE_PATH = /Users/anirban166/Library/Application Support/Code/CachedData/57fd6d0195bb9b9d1b49f6da5db789060795de47
+VSCODE_CODE_CACHE_PATH = /Users/anirban166/Library/Application Support/Code/CachedData/f80445acd5a3dadef24aa209168452a3d97cc326
 # environment
 LOGNAME = anirban166
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # automatic
@@ -117,7 +112,7 @@ TMPDIR = /var/folders/9_/qc989n050_d2sbtw92scjshr0000gn/T/
 # automatic
 *F = $(notdir $*)
 # environment
-VSCODE_IPC_HOOK = /Users/anirban166/Library/Application Support/Code/1.67.0-main.sock
+VSCODE_IPC_HOOK = /Users/anirban166/Library/Application Support/Code/1.64.2-main.sock
 # makefile
 MAKEFLAGS = Rrqp
 # environment
@@ -125,7 +120,7 @@ MFLAGS = -Rrqp
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # environment
-XPC_SERVICE_NAME = application.com.microsoft.VSCode.5055437.5055443
+XPC_SERVICE_NAME = application.com.microsoft.VSCode.365601.365607
 # environment
 HOMEBREW_PREFIX = /opt/homebrew
 # automatic
@@ -142,6 +137,8 @@ COMMAND_MODE = unix2003
 MAKEFILES := 
 # automatic
 <F = $(notdir $<)
+# makefile (from `makefile', line 2)
+M_DIR = ./Source/
 # environment
 LC_ALL = C
 # automatic
@@ -153,9 +150,9 @@ MAKELEVEL := 0
 # environment
 LANG = C
 # environment
-VSCODE_PID = 51445
+VSCODE_PID = 5943
 # variable set hash-table stats:
-# Load=69/1024=7%, Rehash=0, Collisions=1/98=1%
+# Load=70/1024=7%, Rehash=0, Collisions=1/99=1%
 
 # Pattern-specific Variable Values
 
@@ -163,9 +160,9 @@ VSCODE_PID = 51445
 
 # Directories
 
-# . (device 16777232, inode 3701014): 17 files, no impossibilities.
+# . (device 16777232, inode 5089519): 18 files, no impossibilities.
 
-# 17 files, no impossibilities in 1 directories.
+# 18 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -180,6 +177,12 @@ Source/batchScheduler.cpp:
 #  File has not been updated.
 
 # Not a target:
+Source/Algorithms/SJF.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
 all:
 #  Command-line target.
 #  Implicit rule search has been done.
@@ -188,6 +191,14 @@ all:
 # variable set hash-table stats:
 # Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
+EASY.o: Source/Algorithms/EASY.cpp
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `makefile', line 16):
+	$(C) $(CFLAGS) -c $(ALGOS)EASY.cpp
+	
+
 # Not a target:
 .SUFFIXES:
 #  Implicit rule search has not been done.
@@ -195,7 +206,7 @@ all:
 #  File has not been updated.
 
 # Not a target:
-Source/fcfs.cpp:
+Source/Algorithms/FCFS.cpp:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -203,54 +214,43 @@ Source/fcfs.cpp:
 # Not a target:
 makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-05-05 22:24:09
+#  Last modified 2022-05-06 00:00:00
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
 # Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
+FCFS.o: Source/Algorithms/FCFS.cpp
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `makefile', line 13):
+	$(C) $(CFLAGS) -c $(ALGOS)FCFS.cpp
+	
+
 batchScheduler.o: Source/batchScheduler.cpp
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 24):
-	$(C) $(CFLAGS) -c $(DIR)batchScheduler.cpp
+#  commands to execute (from `makefile', line 25):
+	$(C) $(CFLAGS) -c $(M_DIR)batchScheduler.cpp
 	
 
-# Not a target:
- 
-Source/cbf.cpp:
+CBF.o: Source/Algorithms/CBF.cpp
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-
-test.bin: sjf.o fcfs.o easy.o cbf.o sharedUtils.o batchScheduler.o
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-#  commands to execute (from `makefile', line 6):
-	$(C) $(CFLAGS) -o test.bin sjf.o fcfs.o easy.o cbf.o sharedUtils.o batchScheduler.o
+#  commands to execute (from `makefile', line 19):
+	$(C) $(CFLAGS) -c $(ALGOS)CBF.cpp
 	
 
-# Not a target:
-Source/easy.cpp:
+test.bin: SJF.o FCFS.o EASY.o CBF.o sharedUtils.o batchScheduler.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-
-easy.o: Source/easy.cpp
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-#  commands to execute (from `makefile', line 15):
-	$(C) $(CFLAGS) -c $(DIR)easy.cpp
+#  commands to execute (from `makefile', line 7):
+	$(C) $(CFLAGS) -o test.bin SJF.o FCFS.o EASY.o CBF.o sharedUtils.o batchScheduler.o
 	
-
-# Not a target:
-Source/sjf.cpp:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
 
 # Not a target:
 .DEFAULT:
@@ -258,21 +258,19 @@ Source/sjf.cpp:
 #  Modification time never checked.
 #  File has not been updated.
 
-cbf.o: Source/cbf.cpp
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-#  commands to execute (from `makefile', line 18):
-	$(C) $(CFLAGS) -c $(DIR)cbf.cpp
-	
-
 clean:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 27):
-	rm test.bin sjf.o fcfs.o easy.o cbf.o sharedUtils.o batchScheduler.o
+#  commands to execute (from `makefile', line 28):
+	rm test.bin SJF.o FCFS.o EASY.o CBF.o sharedUtils.o batchScheduler.o
 	
+
+# Not a target:
+Source/Algorithms/EASY.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 # Not a target:
 Source/sharedUtils.cpp:
@@ -280,28 +278,26 @@ Source/sharedUtils.cpp:
 #  Modification time never checked.
 #  File has not been updated.
 
-sjf.o: Source/sjf.cpp
+SJF.o: Source/Algorithms/SJF.cpp
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 9):
-	$(C) $(CFLAGS) -c $(DIR)sjf.cpp
+#  commands to execute (from `makefile', line 10):
+	$(C) $(CFLAGS) -c $(ALGOS)SJF.cpp
 	
+
+# Not a target:
+Source/Algorithms/CBF.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 sharedUtils.o: Source/sharedUtils.cpp
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 21):
-	$(C) $(CFLAGS) -c $(DIR)sharedUtils.cpp
-	
-
-fcfs.o: Source/fcfs.cpp
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-#  commands to execute (from `makefile', line 12):
-	$(C) $(CFLAGS) -c $(DIR)fcfs.cpp
+#  commands to execute (from `makefile', line 22):
+	$(C) $(CFLAGS) -c $(M_DIR)sharedUtils.cpp
 	
 
 # files hash-table stats:
@@ -317,6 +313,9 @@ fcfs.o: Source/fcfs.cpp
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Thu May  5 22:24:34 2022
+ 
+make: *** No rule to make target `all'.  Stop.
+
+# Finished Make data base on Fri May  6 00:07:06 2022
 
  

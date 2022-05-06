@@ -1,5 +1,11 @@
-make --dry-run --keep-going --print-directory
+make --dry-run --always-make --keep-going --print-directory
 make: Entering directory `/Users/anirban166/Zephyr'
-make: `test.bin' is up to date.
+g++ -Wall -g -std=c++17 -Iinclude -c ./Source/Algorithms/SJF.cpp
+g++ -Wall -g -std=c++17 -Iinclude -c ./Source/Algorithms/FCFS.cpp
+g++ -Wall -g -std=c++17 -Iinclude -c ./Source/Algorithms/EASY.cpp
+g++ -Wall -g -std=c++17 -Iinclude -c ./Source/Algorithms/CBF.cpp
+g++ -Wall -g -std=c++17 -Iinclude -c ./Source/sharedUtils.cpp
+g++ -Wall -g -std=c++17 -Iinclude -c ./Source/batchScheduler.cpp
+g++ -Wall -g -std=c++17 -Iinclude -o test.bin SJF.o FCFS.o EASY.o CBF.o sharedUtils.o batchScheduler.o
 make: Leaving directory `/Users/anirban166/Zephyr'
  
