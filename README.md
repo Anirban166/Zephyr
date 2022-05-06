@@ -1,10 +1,10 @@
 ### General
-A batch scheduler written in C++ that simulates various real-world scheduling algorithms for compute clusters, keeping track of parallel job schedules and compute-node usage. Input to the simulator includes actual supercomputer workloads.
+A batch scheduler written in C++ that simulates various real-world scheduling algorithms for compute clusters, keeping track of parallel job schedules and compute-node usage.
 
 ### Classes and fields 
 
 <details> <summary> Job </summary> 
-Includes appropriate parameters for a particualar job:
+Includes appropriate parameters for a particular job:
   
 | Field | Representation |
 |:--- | :--- |
@@ -66,7 +66,7 @@ The variables here are tied to the measures that are ordinally collected to comp
 </details> 
   
 ## Algorithms
-- [Shortest Job First](https://github.com/Anirban166/Zephyr/blob/main/Source/sjf.cpp)
-- [First Come First Serve](https://github.com/Anirban166/Zephyr/blob/main/Source/fcfs.cpp)
-
-> Coming soon: Conservative Backfilling and Extensible Argonne Scheduling System
+- [Shortest Job First](https://github.com/Anirban166/Zephyr/blob/main/Source/Algorithms/SJF.cpp)
+- [First Come First Serve](https://github.com/Anirban166/Zephyr/blob/main/Source/Algorithms/FCFS.cpp)
+- [Conservative Backfilling](https://github.com/Anirban166/Zephyr/blob/main/Source/Algorithms/CBF.cpp)
+- [Extensible Argonne Scheduling System](https://github.com/Anirban166/Zephyr/blob/main/Source/Algorithms/EASY.cpp)

@@ -1,27 +1,28 @@
 C = g++
-DIR = ./Source/
+M_DIR = ./Source/
+ALGOS = ./Source/Algorithms/
 CFLAGS = -Wall -g -std=c++17 -Iinclude
 
-test.bin: sjf.o fcfs.o easy.o cbf.o sharedUtils.o batchScheduler.o
-	$(C) $(CFLAGS) -o test.bin sjf.o fcfs.o easy.o cbf.o sharedUtils.o batchScheduler.o
+test.bin: SJF.o FCFS.o EASY.o CBF.o sharedUtils.o batchScheduler.o
+	$(C) $(CFLAGS) -o test.bin SJF.o FCFS.o EASY.o CBF.o sharedUtils.o batchScheduler.o
 
-sjf.o: $(DIR)sjf.cpp
-	$(C) $(CFLAGS) -c $(DIR)sjf.cpp
+SJF.o: $(ALGOS)SJF.cpp
+	$(C) $(CFLAGS) -c $(ALGOS)SJF.cpp
 
-fcfs.o: $(DIR)fcfs.cpp
-	$(C) $(CFLAGS) -c $(DIR)fcfs.cpp
+FCFS.o: $(ALGOS)FCFS.cpp
+	$(C) $(CFLAGS) -c $(ALGOS)FCFS.cpp
 
-easy.o: $(DIR)easy.cpp
-	$(C) $(CFLAGS) -c $(DIR)easy.cpp
+EASY.o: $(ALGOS)EASY.cpp
+	$(C) $(CFLAGS) -c $(ALGOS)EASY.cpp
 
-cbf.o: $(DIR)cbf.cpp
-	$(C) $(CFLAGS) -c $(DIR)cbf.cpp
+CBF.o: $(ALGOS)CBF.cpp
+	$(C) $(CFLAGS) -c $(ALGOS)CBF.cpp
 
-sharedUtils.o: $(DIR)sharedUtils.cpp
-	$(C) $(CFLAGS) -c $(DIR)sharedUtils.cpp
+sharedUtils.o: $(M_DIR)sharedUtils.cpp
+	$(C) $(CFLAGS) -c $(M_DIR)sharedUtils.cpp
 
-batchScheduler.o: $(DIR)batchScheduler.cpp
-	$(C) $(CFLAGS) -c $(DIR)batchScheduler.cpp
+batchScheduler.o: $(M_DIR)batchScheduler.cpp
+	$(C) $(CFLAGS) -c $(M_DIR)batchScheduler.cpp
 
 clean:	
-	rm test.bin sjf.o fcfs.o easy.o cbf.o sharedUtils.o batchScheduler.o
+	rm test.bin SJF.o FCFS.o EASY.o CBF.o sharedUtils.o batchScheduler.o

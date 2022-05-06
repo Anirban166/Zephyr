@@ -1,26 +1,26 @@
-Running the EASY scheduling algorithm.
-EASY scheduling iteration number: 0
+Running the CBF scheduling algorithm.
+CBF scheduling iteration number: 0
 ReservedJobNum: -1
-Sorted job queue: EASY scheduling iteration number: 1
+Sorted job queue: CBF scheduling iteration number: 1
 ReservedJobNum: -1
 Adding job num: 0 to queue
-Sorted job queue: Running job 0 with a submit time of: 1651820604 seconds on node: 0
-Running job 0 with a start time of: 1651820604 seconds
+Sorted job queue: Running job 0 with a submit time of: 1651820610 seconds on node: 0
+Running job 0 with a start time of: 1651820610 seconds
 Running job 0 with a requested job runtime of: 60 seconds
-EASY scheduling iteration number: 2
+CBF scheduling iteration number: 2
 ReservedJobNum: -1
 Sorted job queue: Time taken by job 0: 1
-EASY scheduling iteration number: 3
+CBF scheduling iteration number: 3
 ReservedJobNum: -1
 Adding job num: 1 to queue
 Sorted job queue: Time taken by job 0: 2
-EASY scheduling iteration number: 4
+CBF scheduling iteration number: 4
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 0: 3
-EASY scheduling iteration number: 5
+CBF scheduling iteration number: 5
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 0: 4
-EASY scheduling iteration number: 6
+CBF scheduling iteration number: 6
 ReservedJobNum: 1
 Adding job num: 3 to queue
 Adding job num: 2 to queue
@@ -29,690 +29,690 @@ Sorted job queue: Time taken by job 0: 5
 =====================
 Job 3 Can finish in time while job: 1 is reserving a runtime slot!
 =====================
-Running job 3 with a submit time of: 1651820609 seconds on node: 0
-Running job 3 with a start time of: 1651820609 seconds
+Running job 3 with a submit time of: 1651820615 seconds on node: 0
+Running job 3 with a start time of: 1651820615 seconds
 Running job 3 with a requested job runtime of: 20 seconds
-EASY scheduling iteration number: 7
+CBF scheduling iteration number: 7
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 3: 1
 Time taken by job 0: 6
-EASY scheduling iteration number: 8
+CBF scheduling iteration number: 8
 ReservedJobNum: 1
 Adding job num: 4 to queue
 Sorted job queue: Time taken by job 3: 2
 Time taken by job 0: 7
-EASY scheduling iteration number: 9
+CBF scheduling iteration number: 9
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 3: 3
 Time taken by job 0: 8
-EASY scheduling iteration number: 10
+CBF scheduling iteration number: 10
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 3: 4
 Time taken by job 0: 9
-EASY scheduling iteration number: 11
+CBF scheduling iteration number: 11
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 3: 5
 Time taken by job 0: 10
-EASY scheduling iteration number: 12
+CBF scheduling iteration number: 12
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 3: 6
 Time taken by job 0: 11
-EASY scheduling iteration number: 13
+CBF scheduling iteration number: 13
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 3: 7
 Time taken by job 0: 12
-EASY scheduling iteration number: 14
+CBF scheduling iteration number: 14
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 3: 8
 Time taken by job 0: 13
-EASY scheduling iteration number: 15
+CBF scheduling iteration number: 15
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 3: 9
 Time taken by job 0: 14
-EASY scheduling iteration number: 16
+CBF scheduling iteration number: 16
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 3: 10
 Time taken by job 0: 15
-EASY scheduling iteration number: 17
+CBF scheduling iteration number: 17
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 3: 11
 Time taken by job 0: 16
-EASY scheduling iteration number: 18
+CBF scheduling iteration number: 18
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 3: 12
 Time taken by job 0: 17
-EASY scheduling iteration number: 19
+CBF scheduling iteration number: 19
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 3: 13
 Time taken by job 0: 18
-EASY scheduling iteration number: 20
+CBF scheduling iteration number: 20
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 3: 14
 Time taken by job 0: 19
-EASY scheduling iteration number: 21
+CBF scheduling iteration number: 21
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 3: 15
 Time taken by job 0: 20
-EASY scheduling iteration number: 22
+CBF scheduling iteration number: 22
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 3: 16
 Time taken by job 0: 21
-EASY scheduling iteration number: 23
+CBF scheduling iteration number: 23
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 3: 17
 Time taken by job 0: 22
-EASY scheduling iteration number: 24
+CBF scheduling iteration number: 24
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 3: 18
 Time taken by job 0: 23
-EASY scheduling iteration number: 25
+CBF scheduling iteration number: 25
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 3: 19
 Time taken by job 0: 24
-EASY scheduling iteration number: 26
+CBF scheduling iteration number: 26
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 3: 20
 Time taken by job 0: 25
-EASY scheduling iteration number: 27
+CBF scheduling iteration number: 27
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 3: 21
 Job: 3 killed due to time limit on node: 0
 Time taken by job 0: 26
-EASY scheduling iteration number: 28
+CBF scheduling iteration number: 28
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 0: 27
-EASY scheduling iteration number: 29
+CBF scheduling iteration number: 29
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 0: 28
-EASY scheduling iteration number: 30
+CBF scheduling iteration number: 30
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 0: 29
-EASY scheduling iteration number: 31
+CBF scheduling iteration number: 31
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 0: 30
 Job: 0 finished running on node: 0
-Running job 1 with a submit time of: 1651820606 seconds on node: 0
-Running job 1 with a start time of: 1651820634 seconds
+Running job 1 with a submit time of: 1651820612 seconds on node: 0
+Running job 1 with a start time of: 1651820640 seconds
 Running job 1 with a requested job runtime of: 120 seconds
-EASY scheduling iteration number: 32
+CBF scheduling iteration number: 32
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 1
-EASY scheduling iteration number: 33
+CBF scheduling iteration number: 33
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 2
-EASY scheduling iteration number: 34
+CBF scheduling iteration number: 34
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 3
-EASY scheduling iteration number: 35
+CBF scheduling iteration number: 35
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 4
-EASY scheduling iteration number: 36
+CBF scheduling iteration number: 36
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 5
-EASY scheduling iteration number: 37
+CBF scheduling iteration number: 37
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 6
-EASY scheduling iteration number: 38
+CBF scheduling iteration number: 38
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 7
-EASY scheduling iteration number: 39
+CBF scheduling iteration number: 39
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 8
-EASY scheduling iteration number: 40
+CBF scheduling iteration number: 40
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 9
-EASY scheduling iteration number: 41
+CBF scheduling iteration number: 41
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 10
-EASY scheduling iteration number: 42
+CBF scheduling iteration number: 42
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 11
-EASY scheduling iteration number: 43
+CBF scheduling iteration number: 43
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 12
-EASY scheduling iteration number: 44
+CBF scheduling iteration number: 44
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 13
-EASY scheduling iteration number: 45
+CBF scheduling iteration number: 45
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 14
-EASY scheduling iteration number: 46
+CBF scheduling iteration number: 46
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 15
-EASY scheduling iteration number: 47
+CBF scheduling iteration number: 47
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 16
-EASY scheduling iteration number: 48
+CBF scheduling iteration number: 48
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 17
-EASY scheduling iteration number: 49
+CBF scheduling iteration number: 49
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 18
-EASY scheduling iteration number: 50
+CBF scheduling iteration number: 50
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 19
-EASY scheduling iteration number: 51
+CBF scheduling iteration number: 51
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 20
-EASY scheduling iteration number: 52
+CBF scheduling iteration number: 52
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 21
-EASY scheduling iteration number: 53
+CBF scheduling iteration number: 53
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 22
-EASY scheduling iteration number: 54
+CBF scheduling iteration number: 54
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 23
-EASY scheduling iteration number: 55
+CBF scheduling iteration number: 55
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 24
-EASY scheduling iteration number: 56
+CBF scheduling iteration number: 56
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 25
-EASY scheduling iteration number: 57
+CBF scheduling iteration number: 57
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 26
-EASY scheduling iteration number: 58
+CBF scheduling iteration number: 58
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 27
-EASY scheduling iteration number: 59
+CBF scheduling iteration number: 59
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 28
-EASY scheduling iteration number: 60
+CBF scheduling iteration number: 60
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 29
-EASY scheduling iteration number: 61
+CBF scheduling iteration number: 61
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 30
-EASY scheduling iteration number: 62
+CBF scheduling iteration number: 62
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 31
-EASY scheduling iteration number: 63
+CBF scheduling iteration number: 63
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 32
-EASY scheduling iteration number: 64
+CBF scheduling iteration number: 64
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 33
-EASY scheduling iteration number: 65
+CBF scheduling iteration number: 65
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 34
-EASY scheduling iteration number: 66
+CBF scheduling iteration number: 66
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 35
-EASY scheduling iteration number: 67
+CBF scheduling iteration number: 67
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 36
-EASY scheduling iteration number: 68
+CBF scheduling iteration number: 68
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 37
-EASY scheduling iteration number: 69
+CBF scheduling iteration number: 69
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 38
-EASY scheduling iteration number: 70
+CBF scheduling iteration number: 70
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 39
-EASY scheduling iteration number: 71
+CBF scheduling iteration number: 71
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 40
-EASY scheduling iteration number: 72
+CBF scheduling iteration number: 72
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 41
-EASY scheduling iteration number: 73
+CBF scheduling iteration number: 73
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 42
-EASY scheduling iteration number: 74
+CBF scheduling iteration number: 74
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 43
-EASY scheduling iteration number: 75
+CBF scheduling iteration number: 75
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 44
-EASY scheduling iteration number: 76
+CBF scheduling iteration number: 76
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 45
-EASY scheduling iteration number: 77
+CBF scheduling iteration number: 77
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 46
-EASY scheduling iteration number: 78
+CBF scheduling iteration number: 78
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 47
-EASY scheduling iteration number: 79
+CBF scheduling iteration number: 79
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 48
-EASY scheduling iteration number: 80
+CBF scheduling iteration number: 80
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 49
-EASY scheduling iteration number: 81
+CBF scheduling iteration number: 81
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 50
-EASY scheduling iteration number: 82
+CBF scheduling iteration number: 82
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 51
-EASY scheduling iteration number: 83
+CBF scheduling iteration number: 83
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 52
-EASY scheduling iteration number: 84
+CBF scheduling iteration number: 84
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 53
-EASY scheduling iteration number: 85
+CBF scheduling iteration number: 85
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 54
-EASY scheduling iteration number: 86
+CBF scheduling iteration number: 86
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 55
-EASY scheduling iteration number: 87
+CBF scheduling iteration number: 87
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 56
-EASY scheduling iteration number: 88
+CBF scheduling iteration number: 88
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 57
-EASY scheduling iteration number: 89
+CBF scheduling iteration number: 89
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 58
-EASY scheduling iteration number: 90
+CBF scheduling iteration number: 90
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 59
-EASY scheduling iteration number: 91
+CBF scheduling iteration number: 91
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 60
-EASY scheduling iteration number: 92
+CBF scheduling iteration number: 92
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 61
-EASY scheduling iteration number: 93
+CBF scheduling iteration number: 93
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 62
-EASY scheduling iteration number: 94
+CBF scheduling iteration number: 94
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 63
-EASY scheduling iteration number: 95
+CBF scheduling iteration number: 95
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 64
-EASY scheduling iteration number: 96
+CBF scheduling iteration number: 96
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 65
-EASY scheduling iteration number: 97
+CBF scheduling iteration number: 97
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 66
-EASY scheduling iteration number: 98
+CBF scheduling iteration number: 98
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 67
-EASY scheduling iteration number: 99
+CBF scheduling iteration number: 99
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 68
-EASY scheduling iteration number: 100
+CBF scheduling iteration number: 100
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 69
-EASY scheduling iteration number: 101
+CBF scheduling iteration number: 101
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 70
-EASY scheduling iteration number: 102
+CBF scheduling iteration number: 102
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 71
-EASY scheduling iteration number: 103
+CBF scheduling iteration number: 103
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 72
-EASY scheduling iteration number: 104
+CBF scheduling iteration number: 104
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 73
-EASY scheduling iteration number: 105
+CBF scheduling iteration number: 105
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 74
-EASY scheduling iteration number: 106
+CBF scheduling iteration number: 106
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 75
-EASY scheduling iteration number: 107
+CBF scheduling iteration number: 107
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 76
-EASY scheduling iteration number: 108
+CBF scheduling iteration number: 108
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 77
-EASY scheduling iteration number: 109
+CBF scheduling iteration number: 109
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 78
-EASY scheduling iteration number: 110
+CBF scheduling iteration number: 110
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 79
-EASY scheduling iteration number: 111
+CBF scheduling iteration number: 111
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 80
-EASY scheduling iteration number: 112
+CBF scheduling iteration number: 112
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 81
-EASY scheduling iteration number: 113
+CBF scheduling iteration number: 113
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 82
-EASY scheduling iteration number: 114
+CBF scheduling iteration number: 114
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 83
-EASY scheduling iteration number: 115
+CBF scheduling iteration number: 115
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 84
-EASY scheduling iteration number: 116
+CBF scheduling iteration number: 116
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 85
-EASY scheduling iteration number: 117
+CBF scheduling iteration number: 117
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 86
-EASY scheduling iteration number: 118
+CBF scheduling iteration number: 118
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 87
-EASY scheduling iteration number: 119
+CBF scheduling iteration number: 119
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 88
-EASY scheduling iteration number: 120
+CBF scheduling iteration number: 120
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 89
-EASY scheduling iteration number: 121
+CBF scheduling iteration number: 121
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 90
-EASY scheduling iteration number: 122
+CBF scheduling iteration number: 122
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 91
-EASY scheduling iteration number: 123
+CBF scheduling iteration number: 123
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 92
-EASY scheduling iteration number: 124
+CBF scheduling iteration number: 124
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 93
-EASY scheduling iteration number: 125
+CBF scheduling iteration number: 125
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 94
-EASY scheduling iteration number: 126
+CBF scheduling iteration number: 126
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 95
-EASY scheduling iteration number: 127
+CBF scheduling iteration number: 127
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 96
-EASY scheduling iteration number: 128
+CBF scheduling iteration number: 128
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 97
-EASY scheduling iteration number: 129
+CBF scheduling iteration number: 129
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 98
-EASY scheduling iteration number: 130
+CBF scheduling iteration number: 130
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 99
-EASY scheduling iteration number: 131
+CBF scheduling iteration number: 131
 ReservedJobNum: 1
 Sorted job queue: Time taken by job 1: 100
 Job: 1 finished running on node: 0
-Running job 2 with a submit time of: 1651820609 seconds on node: 0
-Running job 2 with a start time of: 1651820734 seconds
+Running job 2 with a submit time of: 1651820615 seconds on node: 0
+Running job 2 with a start time of: 1651820740 seconds
 Running job 2 with a requested job runtime of: 50 seconds
-EASY scheduling iteration number: 132
+CBF scheduling iteration number: 132
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 1
-EASY scheduling iteration number: 133
+CBF scheduling iteration number: 133
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 2
-EASY scheduling iteration number: 134
+CBF scheduling iteration number: 134
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 3
-EASY scheduling iteration number: 135
+CBF scheduling iteration number: 135
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 4
-EASY scheduling iteration number: 136
+CBF scheduling iteration number: 136
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 5
-EASY scheduling iteration number: 137
+CBF scheduling iteration number: 137
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 6
-EASY scheduling iteration number: 138
+CBF scheduling iteration number: 138
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 7
-EASY scheduling iteration number: 139
+CBF scheduling iteration number: 139
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 8
-EASY scheduling iteration number: 140
+CBF scheduling iteration number: 140
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 9
-EASY scheduling iteration number: 141
+CBF scheduling iteration number: 141
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 10
-EASY scheduling iteration number: 142
+CBF scheduling iteration number: 142
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 11
-EASY scheduling iteration number: 143
+CBF scheduling iteration number: 143
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 12
-EASY scheduling iteration number: 144
+CBF scheduling iteration number: 144
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 13
-EASY scheduling iteration number: 145
+CBF scheduling iteration number: 145
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 14
-EASY scheduling iteration number: 146
+CBF scheduling iteration number: 146
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 15
-EASY scheduling iteration number: 147
+CBF scheduling iteration number: 147
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 16
-EASY scheduling iteration number: 148
+CBF scheduling iteration number: 148
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 17
-EASY scheduling iteration number: 149
+CBF scheduling iteration number: 149
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 18
-EASY scheduling iteration number: 150
+CBF scheduling iteration number: 150
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 19
-EASY scheduling iteration number: 151
+CBF scheduling iteration number: 151
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 20
-EASY scheduling iteration number: 152
+CBF scheduling iteration number: 152
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 21
-EASY scheduling iteration number: 153
+CBF scheduling iteration number: 153
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 22
-EASY scheduling iteration number: 154
+CBF scheduling iteration number: 154
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 23
-EASY scheduling iteration number: 155
+CBF scheduling iteration number: 155
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 24
-EASY scheduling iteration number: 156
+CBF scheduling iteration number: 156
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 25
-EASY scheduling iteration number: 157
+CBF scheduling iteration number: 157
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 26
-EASY scheduling iteration number: 158
+CBF scheduling iteration number: 158
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 27
-EASY scheduling iteration number: 159
+CBF scheduling iteration number: 159
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 28
-EASY scheduling iteration number: 160
+CBF scheduling iteration number: 160
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 29
-EASY scheduling iteration number: 161
+CBF scheduling iteration number: 161
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 30
-EASY scheduling iteration number: 162
+CBF scheduling iteration number: 162
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 31
-EASY scheduling iteration number: 163
+CBF scheduling iteration number: 163
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 32
-EASY scheduling iteration number: 164
+CBF scheduling iteration number: 164
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 33
-EASY scheduling iteration number: 165
+CBF scheduling iteration number: 165
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 34
-EASY scheduling iteration number: 166
+CBF scheduling iteration number: 166
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 35
-EASY scheduling iteration number: 167
+CBF scheduling iteration number: 167
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 36
-EASY scheduling iteration number: 168
+CBF scheduling iteration number: 168
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 37
-EASY scheduling iteration number: 169
+CBF scheduling iteration number: 169
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 38
-EASY scheduling iteration number: 170
+CBF scheduling iteration number: 170
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 39
-EASY scheduling iteration number: 171
+CBF scheduling iteration number: 171
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 40
-EASY scheduling iteration number: 172
+CBF scheduling iteration number: 172
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 41
-EASY scheduling iteration number: 173
+CBF scheduling iteration number: 173
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 42
-EASY scheduling iteration number: 174
+CBF scheduling iteration number: 174
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 43
-EASY scheduling iteration number: 175
+CBF scheduling iteration number: 175
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 44
-EASY scheduling iteration number: 176
+CBF scheduling iteration number: 176
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 45
-EASY scheduling iteration number: 177
+CBF scheduling iteration number: 177
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 46
-EASY scheduling iteration number: 178
+CBF scheduling iteration number: 178
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 47
-EASY scheduling iteration number: 179
+CBF scheduling iteration number: 179
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 48
-EASY scheduling iteration number: 180
+CBF scheduling iteration number: 180
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 49
-EASY scheduling iteration number: 181
+CBF scheduling iteration number: 181
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 50
-EASY scheduling iteration number: 182
+CBF scheduling iteration number: 182
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 2: 51
 Job: 2 killed due to time limit on node: 0
-Running job 4 with a submit time of: 1651820611 seconds on node: 0
-Running job 4 with a start time of: 1651820785 seconds
+Running job 4 with a submit time of: 1651820617 seconds on node: 0
+Running job 4 with a start time of: 1651820791 seconds
 Running job 4 with a requested job runtime of: 80 seconds
-EASY scheduling iteration number: 183
+CBF scheduling iteration number: 183
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 1
-EASY scheduling iteration number: 184
+CBF scheduling iteration number: 184
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 2
-EASY scheduling iteration number: 185
+CBF scheduling iteration number: 185
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 3
-EASY scheduling iteration number: 186
+CBF scheduling iteration number: 186
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 4
-EASY scheduling iteration number: 187
+CBF scheduling iteration number: 187
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 5
-EASY scheduling iteration number: 188
+CBF scheduling iteration number: 188
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 6
-EASY scheduling iteration number: 189
+CBF scheduling iteration number: 189
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 7
-EASY scheduling iteration number: 190
+CBF scheduling iteration number: 190
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 8
-EASY scheduling iteration number: 191
+CBF scheduling iteration number: 191
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 9
-EASY scheduling iteration number: 192
+CBF scheduling iteration number: 192
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 10
-EASY scheduling iteration number: 193
+CBF scheduling iteration number: 193
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 11
-EASY scheduling iteration number: 194
+CBF scheduling iteration number: 194
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 12
-EASY scheduling iteration number: 195
+CBF scheduling iteration number: 195
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 13
-EASY scheduling iteration number: 196
+CBF scheduling iteration number: 196
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 14
-EASY scheduling iteration number: 197
+CBF scheduling iteration number: 197
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 15
-EASY scheduling iteration number: 198
+CBF scheduling iteration number: 198
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 16
-EASY scheduling iteration number: 199
+CBF scheduling iteration number: 199
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 17
-EASY scheduling iteration number: 200
+CBF scheduling iteration number: 200
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 18
-EASY scheduling iteration number: 201
+CBF scheduling iteration number: 201
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 19
-EASY scheduling iteration number: 202
+CBF scheduling iteration number: 202
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 20
-EASY scheduling iteration number: 203
+CBF scheduling iteration number: 203
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 21
-EASY scheduling iteration number: 204
+CBF scheduling iteration number: 204
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 22
-EASY scheduling iteration number: 205
+CBF scheduling iteration number: 205
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 23
-EASY scheduling iteration number: 206
+CBF scheduling iteration number: 206
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 24
-EASY scheduling iteration number: 207
+CBF scheduling iteration number: 207
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 25
-EASY scheduling iteration number: 208
+CBF scheduling iteration number: 208
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 26
-EASY scheduling iteration number: 209
+CBF scheduling iteration number: 209
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 27
-EASY scheduling iteration number: 210
+CBF scheduling iteration number: 210
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 28
-EASY scheduling iteration number: 211
+CBF scheduling iteration number: 211
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 29
-EASY scheduling iteration number: 212
+CBF scheduling iteration number: 212
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 30
-EASY scheduling iteration number: 213
+CBF scheduling iteration number: 213
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 31
-EASY scheduling iteration number: 214
+CBF scheduling iteration number: 214
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 32
-EASY scheduling iteration number: 215
+CBF scheduling iteration number: 215
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 33
-EASY scheduling iteration number: 216
+CBF scheduling iteration number: 216
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 34
-EASY scheduling iteration number: 217
+CBF scheduling iteration number: 217
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 35
-EASY scheduling iteration number: 218
+CBF scheduling iteration number: 218
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 36
-EASY scheduling iteration number: 219
+CBF scheduling iteration number: 219
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 37
-EASY scheduling iteration number: 220
+CBF scheduling iteration number: 220
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 38
-EASY scheduling iteration number: 221
+CBF scheduling iteration number: 221
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 39
-EASY scheduling iteration number: 222
+CBF scheduling iteration number: 222
 ReservedJobNum: 4
 Sorted job queue: Time taken by job 4: 40
 Job: 4 finished running on node: 0

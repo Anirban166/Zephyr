@@ -44,7 +44,7 @@ auto main(int argc, char *argv[]) -> int
     }
     else if(!schedulingAlgorithm.compare("CBF"))
     {
-        finalizeAndOutputMetrics(runEASY(nodeList, jobList, startTime));
+        finalizeAndOutputMetrics(runCBF(nodeList, jobList, startTime));
     }    
     else
     {

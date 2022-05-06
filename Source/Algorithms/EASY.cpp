@@ -1,4 +1,4 @@
-#include "batchScheduler.h"
+#include "../batchScheduler.h"
 
 Metrics runEASY(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp startTime)
 {
@@ -131,8 +131,7 @@ Metrics runEASY(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp 
                 selectedJob.startTime = currentTime;
                 selectedJob.waitTime = currentTime - selectedJob.submitTime;
 
-                // RUNNING JOB METRICS START
-                //  Add this job's waiting time to the total time:
+                // Add this job's waiting time to the total time:
                 easyMetrics.totalWaitSum += selectedJob.waitTime;
                 easyMetrics.longestWait = (easyMetrics.longestWait < selectedJob.waitTime) ? selectedJob.waitTime : easyMetrics.longestWait;
 
@@ -145,7 +144,6 @@ Metrics runEASY(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp 
                 selectedJob.turnAroundTime = (selectedJob.startTime + selectedJob.trueRunTime) - selectedJob.submitTime;
                 easyMetrics.totalturnAroundTime += selectedJob.turnAroundTime;
                 easyMetrics.maxTurnAroundTime = (easyMetrics.maxTurnAroundTime < selectedJob.turnAroundTime) ? selectedJob.turnAroundTime : easyMetrics.maxTurnAroundTime;
-                // RUNNING JOB METRICS END
 
                 // Allocate resources for the waiting job:
                 nodeList.at(selectedNodeID).coresAllocated += selectedJob.requestedCPUs;

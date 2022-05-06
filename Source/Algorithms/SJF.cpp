@@ -1,4 +1,4 @@
-#include "batchScheduler.h"
+#include "../batchScheduler.h"
 
 Metrics runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp startTime)
 {

@@ -1,4 +1,4 @@
-#include "batchScheduler.h"
+#include "../batchScheduler.h"
 
 Metrics runCBF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp startTime)
 {
