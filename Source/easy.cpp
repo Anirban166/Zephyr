@@ -1,10 +1,15 @@
 #include "batchScheduler.h"
 
+bool canFinishBeforeShadow(timestamp shadowTime, timestamp reqRuntime, timestamp currentTime);
+
 Metrics runEASY(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp startTime)
 {
+    const int NO_JOB_RESERVING = -1;
+    int reservedJobNum = NO_JOB_RESERVING;
     std::vector<Job> jobQueue;
     std::vector<Job> runningJobs;
     std::vector<Job> finalJobList;
+    timestamp shadowTime;
     print("Running the EASY scheduling algorithm.\n");
     timestamp currentTime = startTime;
     int simIteration = 0;
@@ -49,6 +54,11 @@ Metrics runEASY(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp 
                 {
                     print("Job: ", (*runningJob).jobNum, " finished running on node: ", (*runningJob).nodeID, "\n");
                     (*runningJob).stopTime = currentTime;
+                    // Reset the waiting job if it finishes.
+                    if (reservedJobNum == (*runningJob).jobNum)
+                    {
+                        reservedJobNum = NO_JOB_RESERVING;
+                    }
                     finalJobList.push_back((*runningJob));
 
                     // Reset node resources: (CPU cores and memory allocated)
@@ -64,14 +74,30 @@ Metrics runEASY(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp 
         for (std::vector<Job>::iterator waitingJob = jobQueue.begin(); waitingJob != jobQueue.end(); ++waitingJob)
         {
             int selectedNodeID = checkNodeResources((*waitingJob), nodeList);
+            bool canFinishInTime = canFinishBeforeShadow(shadowTime, (*waitingJob).requestedRunTime, currentTime);
             // If we have a node that is available, assign the waiting job to run on it:
             if (selectedNodeID > -1)
             {
                 Job selectedJob = (*waitingJob);
+                // If we have a job waiting on the shadow time, then we need to see if this one fits before running.
+                if (reservedJobNum != NO_JOB_RESERVING)
+                {
+                    if (!canFinishInTime)
+                    {
+                        continue; // to the next job that might fit.
+                    }
+                }
+                // We are the first job and/or we can fit without waiting and are the first. Update the shadow time if we extend past the current one/
+                else if (!canFinishInTime)
+                {
+                    shadowTime = currentTime + selectedJob.requestedRunTime;
+                }
+
                 selectedJob.startTime = currentTime;
                 selectedJob.waitTime = currentTime - selectedJob.submitTime;
 
-                // Add this job's waiting time to the total time:
+                // RUNNING JOB METRICS START
+                //  Add this job's waiting time to the total time:
                 easyMetrics.totalWaitSum += selectedJob.waitTime;
                 easyMetrics.longestWait = (easyMetrics.longestWait < selectedJob.waitTime) ? selectedJob.waitTime : easyMetrics.longestWait;
 
@@ -84,6 +110,7 @@ Metrics runEASY(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp 
                 selectedJob.turnAroundTime = (selectedJob.startTime + selectedJob.trueRunTime) - selectedJob.submitTime;
                 easyMetrics.totalturnAroundTime += selectedJob.turnAroundTime;
                 easyMetrics.maxTurnAroundTime = (easyMetrics.maxTurnAroundTime < selectedJob.turnAroundTime) ? selectedJob.turnAroundTime : easyMetrics.maxTurnAroundTime;
+                // RUNNING JOB METRICS END
 
                 // Allocate resources for the waiting job:
                 nodeList.at(selectedNodeID).coresAllocated += selectedJob.requestedCPUs;
@@ -114,6 +141,11 @@ Metrics runEASY(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp 
             else
             {
                 (*waitingJob).waitTime += 1;
+                // If no other job was waiting to start at shadowtime, now we are.
+                if (reservedJobNum == NO_JOB_RESERVING)
+                {
+                    reservedJobNum = (*waitingJob).jobNum;
+                }
                 // Add the rejected job to the waiting list:
                 waitingList.push_back(*waitingJob);
             }
@@ -128,4 +160,9 @@ Metrics runEASY(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp 
     // Use finalJobList to calculate metrics.
 
     return easyMetrics;
+}
+
+bool canFinishBeforeShadow(timestamp shadowTime, timestamp reqRuntime, timestamp currentTime)
+{
+    return currentTime + reqRuntime <= shadowTime;
 }
