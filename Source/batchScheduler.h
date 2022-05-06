@@ -11,6 +11,8 @@
 #include <algorithm>
 using namespace std::chrono;
 using timestamp = std::time_t;
+const int NO_JOB_RESERVING = -1;
+const int NO_SHADOW_TIME_ASSIGNED = -99;
 enum STATUS
 {
   RUNNING,
@@ -40,6 +42,7 @@ public:
   timestamp trueRunTime;               // Generated statically when creating job to simulate the amount of time actually needed
   timestamp turnAroundTime;            // Difference between the times of job submission and completion
   timestamp requestedRunTime;          // User requested (on job creation) job run time
+  timestamp shadowTime;                // Time that this job is guaranteed to start running
   STATUS jobStatus = WAITING;          // Current state of the job (default is wait mode)
   double requestedCPUs, usedCPUs;      // Requested and actually used CPU cores
   double requestedMemory, usedMemory;  // Requested and actually used memory (GiB)
@@ -141,6 +144,10 @@ void finalizeAndOutputMetrics(Metrics metrics);
 Metrics runAlgorithm(std::string selectedAlgorithm);
 // 2.9) Function to indicate if a job can finish before the time at which the first job in the queue finishes execution:
 bool canFinishBeforeShadow(timestamp shadowTime, timestamp reqRuntime, timestamp currentTime);
+bool canFinishBeforeShadowCBF(std::vector<Job> runningJobs, timestamp reqRuntime, int targetNodeId, timestamp currentTime);
+bool jobsReserving(std::vector<Job> jobQueue);
+timestamp findShadowTimeFromPreceedingJobs(std::vector<Job> runningJobs, int targetNodeId);
+void updateShadowTimeOfNext(std::vector<Job> reservingJobs, Job selectedJob, int targetNodeId);
 
 // Notes:
 // 1) Keep definitions of utility functions in the required files

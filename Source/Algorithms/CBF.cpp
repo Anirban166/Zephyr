@@ -3,13 +3,13 @@
 Metrics runCBF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp startTime)
 {
     std::ofstream outputfile("CBFOutput.txt", std::ios::trunc);
-    const int NO_JOB_RESERVING = -1;
     int reservedJobNum = NO_JOB_RESERVING;
     std::vector<Job> jobQueue;
     std::vector<Job> runningJobs;
     std::vector<Job> finalJobList;
-    timestamp shadowTime = startTime;
-    timestamp currentTime = startTime;
+    std::vector<Job> reservingJobs;
+    // timestamp shadowTime(startTime);
+    timestamp currentTime(startTime);
     print("Running the CBF scheduling algorithm.\n");
     outputfile << "Running the CBF scheduling algorithm.\n";
     int simIteration = 0;
@@ -65,11 +65,7 @@ Metrics runCBF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp s
                     outputfile << "Job: " << (*runningJob).jobNum << " finished running on node: " << (*runningJob).nodeID << "\n";
                     // Reset resources
                     (*runningJob).stopTime = currentTime;
-                    // Reset the waiting job if it finishes.
-                    if (reservedJobNum == (*runningJob).jobNum)
-                    {
-                        reservedJobNum = NO_JOB_RESERVING;
-                    }
+
                     finalJobList.push_back((*runningJob));
 
                     // Reset node resources: (CPU cores and memory allocated)
@@ -84,11 +80,7 @@ Metrics runCBF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp s
                     outputfile << "Job: " << (*runningJob).jobNum << " killed due to time limit on node: " << (*runningJob).nodeID << "\n";
                     // Reset resources
                     (*runningJob).stopTime = currentTime;
-                    // Reset the waiting job if it finishes.
-                    if (reservedJobNum == (*runningJob).jobNum)
-                    {
-                        reservedJobNum = NO_JOB_RESERVING;
-                    }
+
                     finalJobList.push_back((*runningJob));
 
                     // Reset node resources: (CPU cores and memory allocated)
@@ -104,32 +96,49 @@ Metrics runCBF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp s
         for (std::vector<Job>::iterator waitingJob = jobQueue.begin(); waitingJob != jobQueue.end(); ++waitingJob)
         {
             int selectedNodeID = checkNodeResources((*waitingJob), nodeList);
-            bool canFinishInTime = canFinishBeforeShadow(shadowTime, (*waitingJob).requestedRunTime, currentTime);
-            // If we have a node that is available, assign the waiting job to run on it:
+            // bool canFinishInTime = canFinishBeforeShadowCBF.(shadowTime, (*waitingJob).requestedRunTime, currentTime);
+            // bool jobsAreReserving = jobsReserving(waitingList);
+            //  If we have a node that is available, assign the waiting job to run on it:
             if (selectedNodeID > -1)
             {
+
                 Job selectedJob = (*waitingJob);
                 // If we have a job waiting on the shadow time, then we need to see if this one fits before running.
-                if (reservedJobNum != NO_JOB_RESERVING && reservedJobNum != selectedJob.jobNum)
+                if (reservingJobs.size())
                 {
-                    // print("Job is reserving!", reservedJobNum, "\n");
+                    // Takes a list of reserving jobs and uses the shadow time of the first job in the queue on our node to determine if it can run
+                    bool canFinishInTime = canFinishBeforeShadowCBF(runningJobs, (*waitingJob).requestedRunTime, selectedNodeID, currentTime);
+                    print("Job is reserving!", reservedJobNum, "\n");
 
                     if (!canFinishInTime)
                     {
-                        // print("=====================\nJob ", selectedJob.jobNum, " Cannot finish in time while job: ", reservedJobNum, " is reserving a runtime slot!\n=====================\n");
+                        print("=====================\nJob ", selectedJob.jobNum, " Cannot finish in time while job: ", reservedJobNum, " is reserving a runtime slot!\n=====================\n");
                         outputfile << "=====================\nJob " << selectedJob.jobNum << " Cannot finish in time while job: " << reservedJobNum << " is reserving a runtime slot!\n=====================\n";
                         continue; // to the next job that might fit.
                     }
                     outputfile << "\n=====================\nJob " << selectedJob.jobNum << " Can finish in time while job: " << reservedJobNum << " is reserving a runtime slot!\n=====================\n";
                 }
                 // We are the first job and/or we can fit without waiting and are the first. Update the shadow time if we extend past the current one/
-                else if (!canFinishInTime)
-                {
-                    shadowTime = currentTime + selectedJob.requestedRunTime;
-                }
+                // else if (!canFinishInTime)
+                // {
+                //    shadowTime = currentTime + selectedJob.requestedRunTime;
+                // }
 
                 selectedJob.startTime = currentTime;
                 selectedJob.waitTime = currentTime - selectedJob.submitTime;
+                selectedJob.nodeID = selectedNodeID;
+
+                // TODO: VERIFY THIS WORKS AS INTENDED TO REMOVE JOB FROM RESERVINGLIST
+                // reservingJobs.erase(std::remove(reservingJobs.begin(), reservingJobs.end(), (*runningJob)), reservingJobs.end());
+
+                // We can no longer reserve a slot if, ya know, we are already using one and running.
+                if (std::find_if(reservingJobs.begin(), reservingJobs.end(), [&](Job const &job)
+                                 { return job.jobNum == selectedJob.jobNum; }) != reservingJobs.end())
+                    reservingJobs.erase(waitingJob);
+
+                // Notify the next job waiting for our node, if it exists.
+                if (reservingJobs.size())
+                    updateShadowTimeOfNext(reservingJobs, selectedJob, selectedNodeID);
 
                 //  Add this job's waiting time to the total time:
                 cbfMetrics.totalWaitSum += selectedJob.waitTime;
@@ -176,12 +185,25 @@ Metrics runCBF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp s
             }
             else
             {
+                if (currentTime == (*waitingJob).submitTime)
+                {
+                    timestamp newShadowTime = findShadowTimeFromPreceedingJobs(reservingJobs, selectedNodeID);
+                    (*waitingJob).shadowTime = newShadowTime;
+
+                    // if (newShadowTime == NO_JOB_RESERVING)
+                    //     (*waitingJob).shadowTime = NO_SHADOW_TIME_ASSIGNED;
+                    // else
+                    // {
+                    //     (*waitingJob).shadowTime = findShadowTimeFromPreceedingJobs(reservingJobs, selectedNodeID);
+                    // }
+                    reservingJobs.push_back((*waitingJob));
+                }
                 (*waitingJob).waitTime += 1;
                 // If no other job was waiting to start at shadowtime, now we are.
-                if (reservedJobNum == NO_JOB_RESERVING)
-                {
-                    reservedJobNum = (*waitingJob).jobNum;
-                }
+                // if (reservedJobNum == NO_JOB_RESERVING)
+                //  {
+                //     reservedJobNum = (*waitingJob).jobNum;
+                // }
                 // Add the rejected job to the waiting list:
                 waitingList.push_back(*waitingJob);
             }

@@ -2,7 +2,7 @@
 
 auto main(int argc, char *argv[]) -> int
 {
-    if(argc != 3)
+    if (argc != 3)
     {
         print("Please enter the following arguments:\n");
         print("The number of jobs to schedule.\n");
@@ -10,7 +10,7 @@ auto main(int argc, char *argv[]) -> int
         exit(-1);
     }
     print("The arguments you entered are:\n");
-    for(int i = 0; i < argc; ++i)
+    for (int i = 0; i < argc; ++i)
         print("Argument ", i, ": ", argv[i], "\n");
 
     // int jobCount = atoi(argv[1]);
@@ -30,22 +30,22 @@ auto main(int argc, char *argv[]) -> int
 
     // std::vector<Job> jobList = buildRandomizedJobs(jobCount, startTime);
     // Choose algorithm to run based on command line input:
-    if(!schedulingAlgorithm.compare("FCFS"))
+    if (!schedulingAlgorithm.compare("FCFS"))
     {
         finalizeAndOutputMetrics(runFCFS(nodeList, jobList, startTime));
     }
-    else if(!schedulingAlgorithm.compare("SJF"))
+    else if (!schedulingAlgorithm.compare("SJF"))
     {
         finalizeAndOutputMetrics(runSJF(nodeList, jobList, startTime));
     }
-    else if(!schedulingAlgorithm.compare("EASY"))
+    else if (!schedulingAlgorithm.compare("EASY"))
     {
         finalizeAndOutputMetrics(runEASY(nodeList, jobList, startTime));
     }
-    else if(!schedulingAlgorithm.compare("CBF"))
+    else if (!schedulingAlgorithm.compare("CBF"))
     {
         finalizeAndOutputMetrics(runCBF(nodeList, jobList, startTime));
-    }    
+    }
     else
     {
         print("Invalid algorithm name! Current options include FCFS and SJF.\n");
@@ -73,7 +73,7 @@ std::vector<Node> buildNodes(int nodeCount)
 std::vector<Job> buildPresetJobs(timestamp startTime, std::string algorithm)
 {
     std::vector<Job> jobList;
-    if(!algorithm.compare("FCFS") || !algorithm.compare("SJF"))
+    if (!algorithm.compare("FCFS") || !algorithm.compare("SJF"))
     {
         jobList.push_back(Job(0, startTime + 1, 60, 30, 6, 6, 102400, 90000));
         jobList.push_back(Job(1, startTime + 4, 120, 100, 8, 8, 102400, 90000));
@@ -81,7 +81,7 @@ std::vector<Job> buildPresetJobs(timestamp startTime, std::string algorithm)
         jobList.push_back(Job(3, startTime + 5, 90, 50, 8, 6, 102400, 45000));
         jobList.push_back(Job(4, startTime + 8, 80, 40, 6, 6, 102400, 90000));
     }
-    if(!algorithm.compare("EASY") || !algorithm.compare("CBF"))
+    if (!algorithm.compare("EASY") || !algorithm.compare("CBF"))
     {
         jobList.push_back(Job(0, startTime + 1, 60, 30, 6, 6, 90000, 90000));
         jobList.push_back(Job(1, startTime + 3, 120, 100, 8, 8, 80000, 90000));
@@ -112,16 +112,29 @@ void finalizeAndOutputMetrics(Metrics metrics)
     print("Total Turnaroundtime: ", metrics.totalturnAroundTime, " seconds\n Average Turnaround time: ", metrics.avgturnAroundTime, " seconds\n Maximum turnaround time: ", metrics.maxTurnAroundTime, " seconds\n");
 }
 
-/*
-std::vector<Job> buildRandomizedJobs(int jobCount, std::time_t startTime)
+/*std::vector<Job> buildRandomizedJobs(int jobCount, std::time_t startTime)
 {
-    // double random = lowLimit + (rand() % higherLimit - 1)
+    std::vector<Job> jobList;
+    // jobList.push_back(Job(1, startTime + 3, 120, 100, 8, 8, 80000, 90000));
+    double randomizedSubmitTime = startTime + rangeRNG(1, 10);
+    double randomizedRequestedRunTime = rangeRNG(10, 150);
+    double randomizedTrueRunTime = rangeRNG(10, 150);
+    double randomizedRequestedCPUs = rangeRNG(1, 10);
+    double randomizedUsedCPUs = rangeRNG(1, 10);
+    double randomizedRequestedMemory = rangeRNG(1000, 102400);
+    double randomizedUsedMemory = rangeRNG(1000, 102400);
+
     // randomOnetoTen, randomOnetoSixty, randomOneto105000
-    for(int i = 0; i < jobCount; i++)
+    for (int i = 0; i < jobCount; i++)
     {
-        jobList.push_back(Job(i, startTime + randomOnetoTen, randomOnetoSixty, randomOnetoSixty,
-                              randomOnetoTen, randomOnetoTen, randomOneto105000, randomOneto105000));
+        jobList.push_back(Job(i, randomizedSubmitTime, randomizedRequestedRunTime, randomizedTrueRunTime, randomizedRequestedCPUs, randomizedUsedCPUs, randomizedRequestedMemory, randomizedUsedMemory));
         // Randomized parameters in order: (excluding jobNum i.e.)
         // submitTime, requestedRunTime, trueRunTime, requestedCPUs, usedCPUs, requestedMemory, usedMemory
     }
-} */
+}
+
+double rangeRNG(double lowerLimit, double upperLimit)
+{
+    //   return lowerLimit + (rand() % (upperLimit - 1));
+    return 0;
+} THIS SHIT BROKE ANI*/
