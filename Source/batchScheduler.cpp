@@ -26,11 +26,11 @@ auto main(int argc, char *argv[]) -> int
     // Generate nodes and jobs:
     int nodeCount = 3;
     std::vector<Node> nodeList = buildNodes(nodeCount);
-    std::vector<Job> jobList = buildPresetJobs(startTime);
+    std::vector<Job> jobList = buildPresetJobs(startTime, schedulingAlgorithm);
 
     // std::vector<Job> jobList = buildRandomizedJobs(jobCount, startTime);
     // Choose algorithm to run based on command line input:
-    if (!schedulingAlgorithm.compare("FCFS"))
+    if (!schedulingAlgorithm.compare("FCFS")) // compare() returns 0 if strings match.
     {
         finalizeAndOutputMetrics(runFCFS(nodeList, jobList, startTime));
     }
@@ -55,21 +55,36 @@ std::vector<Node> buildNodes(int nodeCount)
     std::vector<Node> nodeList;
     int maxCoresPerNode = 24;
     int maxMemoryPerNode = 102400; // Allocating 100 GiB per node (102400 MiB)
-    for (int i = 0; i < nodeCount; ++i)
-    {
-        nodeList.push_back(Node(i, maxCoresPerNode, maxMemoryPerNode));
-    }
+                                   //    for (int i = 0; i < nodeCount; ++i)
+                                   //   {
+                                   //       nodeList.push_back(Node(i, maxCoresPerNode, maxMemoryPerNode));
+                                   //  }
+
+    nodeList.push_back(Node(0, maxCoresPerNode, maxMemoryPerNode));
+    // nodeList.push_back(Node(1, maxCoresPerNode, maxMemoryPerNode));
+    // nodeList.push_back(Node(2, 8, maxMemoryPerNode));
     return nodeList;
 }
 
-std::vector<Job> buildPresetJobs(timestamp startTime)
+std::vector<Job> buildPresetJobs(timestamp startTime, std::string algorithm)
 {
     std::vector<Job> jobList;
-    jobList.push_back(Job(0, startTime + 1, 60, 30, 6, 6, 102400, 90000));
-    jobList.push_back(Job(1, startTime + 5, 120, 100, 8, 8, 102400, 90000));
-    jobList.push_back(Job(2, startTime + 5, 100, 95, 8, 4, 102400, 90000));
-    jobList.push_back(Job(3, startTime + 5, 90, 50, 8, 6, 102400, 45000));
-    jobList.push_back(Job(4, startTime + 8, 80, 40, 6, 6, 102400, 90000));
+    if (!algorithm.compare("FCFS") || !algorithm.compare("SJF"))
+    {
+        jobList.push_back(Job(0, startTime + 1, 60, 30, 6, 6, 102400, 90000));
+        jobList.push_back(Job(1, startTime + 4, 120, 100, 8, 8, 102400, 90000));
+        jobList.push_back(Job(2, startTime + 5, 100, 95, 8, 4, 102400, 90000));
+        jobList.push_back(Job(3, startTime + 5, 90, 50, 8, 6, 102400, 45000));
+        jobList.push_back(Job(4, startTime + 8, 80, 40, 6, 6, 102400, 90000));
+    }
+    if (!algorithm.compare("EASY"))
+    {
+        jobList.push_back(Job(0, startTime + 1, 60, 30, 6, 6, 90000, 90000));
+        jobList.push_back(Job(1, startTime + 3, 120, 100, 8, 8, 80000, 90000));
+        jobList.push_back(Job(2, startTime + 6, 50, 95, 8, 4, 35000, 2000));
+        jobList.push_back(Job(3, startTime + 6, 20, 50, 8, 6, 2000, 3000));
+        jobList.push_back(Job(4, startTime + 8, 80, 40, 6, 6, 102400, 90000));
+    }
     return jobList;
 }
 

@@ -6,6 +6,7 @@
 #include <vector>
 #include <cstdlib>
 #include <cstring>
+#include <fstream>
 #include <iostream>
 #include <algorithm>
 using namespace std::chrono;
@@ -117,7 +118,7 @@ public:
 // 2.1) Function to build nodes and return a vector of all the available nodes:
 std::vector<Node> buildNodes(int nodeCount);
 // 2.2) Function to build preset jobs and return a vector of all the jobs:
-std::vector<Job> buildPresetJobs(std::time_t startTime);
+std::vector<Job> buildPresetJobs(std::time_t startTime, std::string algorithm);
 // 2.2.1) Either replace the above with randomized jobs or use this instead after initial testing:
 // std::vector<Job> buildRandomizedJobs(int jobCount, std::time_t startTime)
 // 2.3) Checks for job validity, returns node ID for whichever node first has the requested resources under its maximum bounds,
@@ -133,8 +134,10 @@ bool simulationFinished(std::vector<Job> jobList, std::vector<Job> jobQueue, std
 // 2.7) Function to print jobs:
 void printJobs(std::vector<Job> jobs);
 
-Metrics runAlgorithm(std::string selectedAlgorithm);
 void finalizeAndOutputMetrics(Metrics metrics);
+Metrics runAlgorithm(std::string selectedAlgorithm);
+bool canFinishBeforeShadow(timestamp shadowTime, timestamp reqRuntime, timestamp currentTime);
+// void printJobsToFile(std::vector<Job> jobs, std::ofstream file);
 
 // Notes:
 // 1) Keep definitions of utility functions in the required files
@@ -157,5 +160,7 @@ void finalizeAndOutputMetrics(Metrics metrics);
 Metrics runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime);
 // 3.2) First Come First Serve (FCFS)
 Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime);
-// 3.3) Extensible Argonne Scheduling System
+// 3.3) Extensible Argonne Scheduling System (EASY)
 Metrics runEASY(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime);
+// 3.4) Extensible Argonne Scheduling System (CBF)
+Metrics runCBF(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime);
