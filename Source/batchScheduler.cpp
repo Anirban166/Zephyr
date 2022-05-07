@@ -26,7 +26,8 @@ auto main(int argc, char *argv[]) -> int
     // Generate nodes and jobs:
     int nodeCount = 3;
     std::vector<Node> nodeList = buildNodes(nodeCount);
-    std::vector<Job> jobList = buildPresetJobs(startTime, schedulingAlgorithm);
+    std::vector<Job> jobList = buildRandomizedJobs(5, startTime);
+    // std::vector<Job> jobList = buildPresetJobs(startTime, schedulingAlgorithm);
 
     // std::vector<Job> jobList = buildRandomizedJobs(jobCount, startTime);
     // Choose algorithm to run based on command line input:
@@ -112,29 +113,28 @@ void finalizeAndOutputMetrics(Metrics metrics)
     print("Total Turnaroundtime: ", metrics.totalturnAroundTime, " seconds\n Average Turnaround time: ", metrics.avgturnAroundTime, " seconds\n Maximum turnaround time: ", metrics.maxTurnAroundTime, " seconds\n");
 }
 
-/*std::vector<Job> buildRandomizedJobs(int jobCount, std::time_t startTime)
+std::vector<Job> buildRandomizedJobs(int jobCount, std::time_t startTime)
 {
     std::vector<Job> jobList;
-    // jobList.push_back(Job(1, startTime + 3, 120, 100, 8, 8, 80000, 90000));
-    double randomizedSubmitTime = startTime + rangeRNG(1, 10);
-    double randomizedRequestedRunTime = rangeRNG(10, 150);
+    double randomizedSubmitTime = startTime + rangeRNG(1, 10); 
+    double randomizedRequestedRunTime = rangeRNG(10, 150); 
     double randomizedTrueRunTime = rangeRNG(10, 150);
     double randomizedRequestedCPUs = rangeRNG(1, 10);
     double randomizedUsedCPUs = rangeRNG(1, 10);
     double randomizedRequestedMemory = rangeRNG(1000, 102400);
     double randomizedUsedMemory = rangeRNG(1000, 102400);
-
-    // randomOnetoTen, randomOnetoSixty, randomOneto105000
-    for (int i = 0; i < jobCount; i++)
+    for(int i = 0; i < jobCount; i++)
     {
-        jobList.push_back(Job(i, randomizedSubmitTime, randomizedRequestedRunTime, randomizedTrueRunTime, randomizedRequestedCPUs, randomizedUsedCPUs, randomizedRequestedMemory, randomizedUsedMemory));
-        // Randomized parameters in order: (excluding jobNum i.e.)
-        // submitTime, requestedRunTime, trueRunTime, requestedCPUs, usedCPUs, requestedMemory, usedMemory
+        jobList.push_back(Job(i, randomizedSubmitTime, randomizedRequestedRunTime, randomizedTrueRunTime, 
+          randomizedRequestedCPUs, randomizedUsedCPUs, randomizedRequestedMemory, randomizedUsedMemory));
     }
+    return jobList;
 }
 
 double rangeRNG(double lowerLimit, double upperLimit)
-{
-    //   return lowerLimit + (rand() % (upperLimit - 1));
-    return 0;
-} THIS SHIT BROKE ANI*/
+{   // Obtaining a random number from H/W, seeding the generator using it (for run reproducibility) and using a uniform distribution: 
+    std::random_device randomDevice;
+    std::mt19937 generator(randomDevice());
+    std::uniform_int_distribution<> uniformDistributionBasedRandomNumber(lowerLimit, upperLimit);    
+    return uniformDistributionBasedRandomNumber(generator);
+}
