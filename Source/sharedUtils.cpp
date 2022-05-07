@@ -30,12 +30,6 @@ int isJobValid(Job waitingJob, std::vector<Node> nodeList)
     return nodeID;
 }
 
-// bool jobsReserving(std::vector<Job> jobQueue){
-//    for (std::vector<Job>::iterator waitingJob = jobQueue.begin(); waitingJob != jobQueue.end(); ++waitingJob) {
-
-//   }
-//}
-
 // Takes the target node to run on and determines if we can be backfilled into it based on currently running jobs.
 bool canFinishBeforeShadowCBF(std::vector<Job> runningJobs, timestamp reqRuntime, int targetNodeId, timestamp currentTime)
 {
