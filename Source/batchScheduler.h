@@ -118,44 +118,51 @@ public:
 // ----------------------
 // 2.0: Utility Functions
 // ----------------------
-// 2.1) Function to build nodes and return a vector of all the available nodes:
+// 2.1) Functions to build stuff:
+// 2.1.1) Build nodes and return a vector of all the available nodes:
 std::vector<Node> buildNodes(int nodeCount);
-// 2.2) Function to build preset jobs and return a vector of all the jobs:
+// 2.1.2) Build preset jobs and return a vector of all the jobs:
 std::vector<Job> buildPresetJobs(std::time_t startTime, std::string algorithm);
-// 2.2.1) Either replace the above with randomized jobs or use this instead after initial testing:
-// std::vector<Job> buildRandomizedJobs(int jobCount, std::time_t startTime)
-// 2.3) Checks for job validity, returns node ID for whichever node first has the requested resources under its maximum bounds,
+// 2.1.3) Build randomized parameters for a specified (input) number of jobs:
+std::vector<Job> buildRandomizedJobs(int jobCount, std::time_t startTime);
+// 2.2) Checks for job validity, returns node ID for whichever node first has the requested resources under its maximum bounds,
 // otherwise -1 if the request is above the limits for all the nodes:
 int isJobValid(Job waitingJob, std::vector<Node> nodeList);
-// 2.4) Returns node ID for whichever node has the required resources for the job that requests it,
+// 2.3) Returns node ID for whichever node has the required resources for the job that requests it,
 // otherwise if all nodes can't satisfy the resource requirements, it returns a -1:
 int checkNodeResources(Job waitingJob, std::vector<Node> nodeList);
-// 2.5) Function to verify the feasibility of jobs:
+// 2.4) Function to verify the feasibility of jobs:
 std::vector<Job> verifyJobs(std::vector<Job> jobList, std::vector<Node> nodeList);
-// 2.6) Function to indicate the end of simulation, when the joblist and queues are empty at the very end:
+// 2.5) Function to indicate the end of simulation, when the joblist and queues are empty at the very end:
 bool simulationFinished(std::vector<Job> jobList, std::vector<Job> jobQueue, std::vector<Job> runningJobs);
-// 2.7) Functions to print stuff:
-// 2.7.1) Function to print jobs:
+// 2.6) Functions to print stuff:
+// 2.6.1) Function to print jobs:
 void printJobs(std::vector<Job> jobs);
 // void printJobsToFile(std::vector<Job> jobs, std::ofstream file);
-// 2.7.2) Function to print the finalized (post operations such as taking the average) metrics that we are concerned with:
-void finalizeAndOutputMetrics(Metrics metrics);
-// 2.8) Function to run the input scheduling algorithm and return the metrics for the simulated run of the selected algorithm:
-Metrics runAlgorithm(std::string selectedAlgorithm);
-// 2.9) Function to indicate if a job can finish before the time at which the first job in the queue finishes execution:
-bool canFinishBeforeShadow(timestamp shadowTime, timestamp reqRuntime, timestamp currentTime);
-bool canFinishBeforeShadowCBF(std::vector<Job> runningJobs, timestamp reqRuntime, int targetNodeId, timestamp currentTime);
-bool jobsReserving(std::vector<Job> jobQueue);
-timestamp findShadowTimeFromPreceedingJobs(std::vector<Job> runningJobs, int targetNodeId);
-void updateShadowTimeOfNext(std::vector<Job> reservingJobs, Job selectedJob, int targetNodeId);
+// 2.6.2) Function to print reserved jobs:
 void printReservedJobs(std::vector<Job> jobs);
+// 2.6.3) Function to print the finalized (post operations such as taking the average) metrics that we are concerned with:
+void finalizeAndOutputMetrics(Metrics metrics, std::string fileName);
+// 2.7) Conditionals:
+// 2.7.1) Function to indicate if a job can finish before the time at which the first job in the queue finishes execution:
+bool canFinishBeforeShadow(timestamp shadowTime, timestamp reqRuntime, timestamp currentTime);
+// 2.7.2) Special case of the above for conservative backfilling:
+bool canFinishBeforeShadowCBF(std::vector<Job> runningJobs, timestamp reqRuntime, int targetNodeId, timestamp currentTime);
+// 2.7.3) Function to reserve jobs:
+bool jobsReserving(std::vector<Job> jobQueue);
+// 2.8) Metrics or timestamp returning functions:
+// 2.8.1) Function to run the input scheduling algorithm and return the metrics for the simulated run of the selected algorithm:
+Metrics runAlgorithm(std::string selectedAlgorithm);
+// 2.8.2) Function to return the shadow time from the preeceding jobs:
+timestamp findShadowTimeFromPreceedingJobs(std::vector<Job> runningJobs, int targetNodeId);
+// 2.9) Miscellaneous:
+// 2.9.1) Function to update the shadow time of the next waiting job:
+void updateShadowTimeOfNext(std::vector<Job> reservingJobs, Job selectedJob, int targetNodeId);
+// 2.9.2) Function to generate random numbers (from the uniform distribution) in a range:
+double rangeRNG(double lowerLimit, double upperLimit);
 
-// Notes:
-// 1) Keep definitions of utility functions in the required files
-// In case of two or more files requiring the same function,
-// just emplace one function once to avoid linker errors.
-// 2) Making isJobValid() return a boolean will create an infinite loop
-// 3) We are currently iterating on the reverse since erase() moves everything to the left to fill the hole.
+// Iterator notes:
+// We are currently iterating on the reverse since erase() moves everything to the left to fill the hole.
 // Alternatives:
 // (a) Increment prior to erasing:
 // i.e., remove the increment/decrement from the loop and use jobList.erase(++currentJobIter);
