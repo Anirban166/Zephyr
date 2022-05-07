@@ -16,16 +16,18 @@ int checkNodeResources(Job waitingJob, std::vector<Node> nodeList)
 
 int isJobValid(Job waitingJob, std::vector<Node> nodeList)
 {
+    int nodeID = -1;
     for (std::vector<Node>::iterator currentNode = nodeList.begin(); currentNode != nodeList.end(); ++currentNode)
     {
         if ((waitingJob.requestedCPUs <= (*currentNode).coreCount) && (waitingJob.requestedMemory <= (*currentNode).memoryAmount))
         {
-            print("Returning available node with id: ", (*currentNode).nodeID, " for job: ", waitingJob.jobNum, "\n");
-            return (*currentNode).nodeID;
+            // print("Returning available node with id: ", (*currentNode).nodeID, " for job: ", waitingJob.jobNum, "\n");
+            nodeID = (*currentNode).nodeID;
+            return nodeID;
         }
     }
     print("Couldn't find a node with desired resources as requested (exceeds the maximum for all nodes)!\n");
-    return -1;
+    return nodeID;
 }
 
 // bool jobsReserving(std::vector<Job> jobQueue){
@@ -94,13 +96,25 @@ void updateShadowTimeOfNext(std::vector<Job> reservingJobs, Job selectedJob, int
     }
 }
 
+void printReservedJobs(std::vector<Job> jobs)
+{
+    int count = 0;
+    print("[");
+    for (std::vector<Job>::iterator currJob = jobs.begin(); currJob != jobs.end(); ++currJob)
+    {
+        print("( ", count, "th job in list: ", (*currJob).jobNum, " requires: ", (*currJob).requestedRunTime, " seconds. Shadow Time: ", (*currJob).shadowTime, " ) ");
+        count++;
+    }
+    print("]\n");
+}
+
 void printJobs(std::vector<Job> jobs)
 {
     int count = 0;
     print("[");
     for (std::vector<Job>::iterator currJob = jobs.begin(); currJob != jobs.end(); ++currJob)
     {
-        print(count, "th job in list: ", (*currJob).jobNum, " requires: ", (*currJob).requestedRunTime, " seconds,");
+        print("( ", count, "th job in list: ", (*currJob).jobNum, " requires: ", (*currJob).requestedRunTime, " seconds.", " ) ");
         count++;
     }
     print("]\n");

@@ -148,6 +148,7 @@ bool canFinishBeforeShadowCBF(std::vector<Job> runningJobs, timestamp reqRuntime
 bool jobsReserving(std::vector<Job> jobQueue);
 timestamp findShadowTimeFromPreceedingJobs(std::vector<Job> runningJobs, int targetNodeId);
 void updateShadowTimeOfNext(std::vector<Job> reservingJobs, Job selectedJob, int targetNodeId);
+void printReservedJobs(std::vector<Job> jobs);
 
 // Notes:
 // 1) Keep definitions of utility functions in the required files
