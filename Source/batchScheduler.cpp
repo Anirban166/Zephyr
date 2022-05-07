@@ -65,7 +65,7 @@ std::vector<Node> buildNodes(int nodeCount)
                                    // }
 
     nodeList.push_back(Node(0, maxCoresPerNode, maxMemoryPerNode));
-    // nodeList.push_back(Node(1, maxCoresPerNode, maxMemoryPerNode));
+    nodeList.push_back(Node(1, 8, 30000));
     // nodeList.push_back(Node(2, 8, maxMemoryPerNode));
     return nodeList;
 }
@@ -73,7 +73,8 @@ std::vector<Node> buildNodes(int nodeCount)
 std::vector<Job> buildPresetJobs(timestamp startTime, std::string algorithm)
 {
     std::vector<Job> jobList;
-    if (!algorithm.compare("FCFS") || !algorithm.compare("SJF"))
+    // if (!algorithm.compare("FCFS") || !algorithm.compare("SJF"))
+    if (!algorithm.compare("SJFTEST"))
     {
         jobList.push_back(Job(0, startTime + 1, 60, 30, 6, 6, 102400, 90000));
         jobList.push_back(Job(1, startTime + 4, 120, 100, 8, 8, 102400, 90000));
@@ -81,13 +82,13 @@ std::vector<Job> buildPresetJobs(timestamp startTime, std::string algorithm)
         jobList.push_back(Job(3, startTime + 5, 90, 50, 8, 6, 102400, 45000));
         jobList.push_back(Job(4, startTime + 8, 80, 40, 6, 6, 102400, 90000));
     }
-    if (!algorithm.compare("EASY") || !algorithm.compare("CBF"))
+    if (!algorithm.compare("EASY") || !algorithm.compare("CBF") || !algorithm.compare("FCFS") || !algorithm.compare("SJF"))
     {
         jobList.push_back(Job(0, startTime + 1, 60, 30, 6, 6, 90000, 90000));
         jobList.push_back(Job(1, startTime + 3, 120, 100, 8, 8, 80000, 90000));
         jobList.push_back(Job(2, startTime + 6, 50, 95, 8, 4, 35000, 2000));
         jobList.push_back(Job(3, startTime + 6, 20, 50, 8, 6, 2000, 3000));
-        jobList.push_back(Job(4, startTime + 8, 80, 40, 6, 6, 102400, 90000));
+        jobList.push_back(Job(4, startTime + 8, 80, 40, 6, 6, 30000, 90000));
     }
     return jobList;
 }
