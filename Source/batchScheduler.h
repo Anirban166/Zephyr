@@ -142,7 +142,7 @@ void printJobs(std::vector<Job> jobs);
 // 2.6.2) Function to print reserved jobs:
 void printReservedJobs(std::vector<Job> jobs);
 // 2.6.3) Function to print the finalized (post operations such as taking the average) metrics that we are concerned with:
-void finalizeAndOutputMetrics(Metrics metrics);
+void finalizeAndOutputMetrics(Metrics metrics, std::string fileName);
 // 2.7) Conditionals:
 // 2.7.1) Function to indicate if a job can finish before the time at which the first job in the queue finishes execution:
 bool canFinishBeforeShadow(timestamp shadowTime, timestamp reqRuntime, timestamp currentTime);

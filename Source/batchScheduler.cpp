@@ -2,7 +2,7 @@
 
 auto main(int argc, char *argv[]) -> int
 {
-    if (argc != 3)
+    if(argc != 3)
     {
         print("Please enter the following arguments:\n");
         print("The number of jobs to schedule.\n");
@@ -10,13 +10,14 @@ auto main(int argc, char *argv[]) -> int
         exit(-1);
     }
     print("The arguments you entered are:\n");
-    for (int i = 0; i < argc; ++i)
+    for(int i = 0; i < argc; ++i)
+    {
         print("Argument ", i, ": ", argv[i], "\n");
-
+    }
     // int jobCount = atoi(argv[1]);
     std::string schedulingAlgorithm = argv[2];
 
-    // Get the current time to reference as a start point for the entire simulation
+    // Get the current time to reference as a start point for the entire simulation:
     time_point<system_clock, seconds> startTimePoint = time_point_cast<seconds>(system_clock::now());
     std::time_t startTime = std::chrono::system_clock::to_time_t(startTimePoint);
 
@@ -33,26 +34,32 @@ auto main(int argc, char *argv[]) -> int
     // Choose algorithm to run based on command line input:
     if (!schedulingAlgorithm.compare("FCFS"))
     {
-        finalizeAndOutputMetrics(runFCFS(nodeList, jobList, startTime));
+        finalizeAndOutputMetrics(runFCFS(nodeList, jobList, startTime), "FCFSMetrics.txt");
     }
     else if (!schedulingAlgorithm.compare("SJF"))
     {
-        finalizeAndOutputMetrics(runSJF(nodeList, jobList, startTime));
+        finalizeAndOutputMetrics(runSJF(nodeList, jobList, startTime), "SJFMetrics.txt");
     }
     else if (!schedulingAlgorithm.compare("EASY"))
     {
-        finalizeAndOutputMetrics(runEASY(nodeList, jobList, startTime));
+        finalizeAndOutputMetrics(runEASY(nodeList, jobList, startTime), "EASYMetrics.txt");
     }
     else if (!schedulingAlgorithm.compare("CBF"))
     {
-        finalizeAndOutputMetrics(runCBF(nodeList, jobList, startTime));
+        finalizeAndOutputMetrics(runCBF(nodeList, jobList, startTime), "CBFMetrics.txt");
     }
+    else if (!schedulingAlgorithm.compare("ALL"))
+    {
+        finalizeAndOutputMetrics(runFCFS(nodeList, jobList, startTime), "FCFSMetrics.txt");
+        finalizeAndOutputMetrics(runSJF(nodeList, jobList, startTime), "SJFMetrics.txt");
+        finalizeAndOutputMetrics(runEASY(nodeList, jobList, startTime), "EASYMetrics.txt");
+        finalizeAndOutputMetrics(runCBF(nodeList, jobList, startTime), "CBFMetrics.txt");
+    }    
     else
     {
-        print("Invalid algorithm name! Current options include FCFS and SJF.\n");
+        print("Invalid algorithm name! Current options include FCFS, SJF, EASY, CBF and ALL (to run all four separately).\n");
         exit(-1);
     }
-    // finalizeAndOutputMetrics(algorithmMetrics);
 }
 
 std::vector<Node> buildNodes(int nodeCount)
@@ -60,11 +67,10 @@ std::vector<Node> buildNodes(int nodeCount)
     std::vector<Node> nodeList;
     int maxCoresPerNode = 24;
     int maxMemoryPerNode = 102400; // Allocating 100 GiB per node (102400 MiB)
-                                   // for (int i = 0; i < nodeCount; ++i)
-                                   // {
-                                   //   nodeList.push_back(Node(i, maxCoresPerNode, maxMemoryPerNode));
-                                   // }
-
+    // for (int i = 0; i < nodeCount; ++i)
+    // {
+    //   nodeList.push_back(Node(i, maxCoresPerNode, maxMemoryPerNode));
+    // }
     nodeList.push_back(Node(0, maxCoresPerNode, maxMemoryPerNode));
     // nodeList.push_back(Node(1, maxCoresPerNode, maxMemoryPerNode));
     // nodeList.push_back(Node(2, 8, maxMemoryPerNode));
@@ -98,31 +104,28 @@ bool simulationFinished(std::vector<Job> jobList, std::vector<Job> jobQueue, std
     return (jobList.empty() && jobQueue.empty() && runningJobs.empty());
 }
 
-void finalizeAndOutputMetrics(Metrics metrics)
+void finalizeAndOutputMetrics(Metrics metrics, std::string fileName)
 {
-    print("Metrics for simulation:\nAlgorithm used: ", metrics.algorithm, "\n");
-    print("Maximum number of CPUs used simultaneously: ", metrics.maxCPUsUsed, "\nMaximum amount of memory used simultaneously: ", metrics.maxMemoryUsed, " MiB\n");
+    std::ofstream outputfile(fileName, std::ios::trunc);    
+    outputfile << "Metrics for simulation:\nAlgorithm used: " << metrics.algorithm << "\n";
+    outputfile << "Maximum number of CPUs used simultaneously: " << metrics.maxCPUsUsed << "\nMaximum amount of memory used simultaneously: " << metrics.maxMemoryUsed << " MiB\n";
     metrics.averageCPUsUsed = metrics.totalCPUsUsed / metrics.totalJobsRun;
     metrics.averageMemoryUsed = metrics.totalMemoryUsed / metrics.totalJobsRun;
-    print("Average CPUs in use simultaneously: ", metrics.averageCPUsUsed, "\nAverage amount of memory used simultaneously: ", metrics.averageMemoryUsed, " MiB\n");
+    outputfile << "Average CPUs in use simultaneously: " << metrics.averageCPUsUsed << "\nAverage amount of memory used simultaneously: " << metrics.averageMemoryUsed << " MiB\n";
     metrics.averageWait = metrics.totalWaitSum / metrics.totalJobsRun;
-    print("Total wait time: ", metrics.totalWaitSum, " seconds\nAverage wait time: ", metrics.averageWait, " seconds\nMaximum wait time: ", metrics.longestWait, " seconds\n");
+    outputfile << "Total wait time: " << metrics.totalWaitSum << " seconds\nAverage wait time: " << metrics.averageWait << " seconds\nMaximum wait time: " << metrics.longestWait << " seconds\n";
     metrics.avgStretch = metrics.totalStretch / metrics.totalJobsRun;
-    print("Total stretch: ", metrics.totalStretch, "\nAverage stretch: ", metrics.avgStretch, "\nMaximum stretch: ", metrics.maxStretch, "\n");
+    outputfile << "Total stretch: " << metrics.totalStretch << "\nAverage stretch: " << metrics.avgStretch << "\nMaximum stretch: " << metrics.maxStretch << "\n";
     metrics.avgturnAroundTime = metrics.totalturnAroundTime / metrics.totalJobsRun;
-    print("Total Turnaroundtime: ", metrics.totalturnAroundTime, " seconds\n Average Turnaround time: ", metrics.avgturnAroundTime, " seconds\n Maximum turnaround time: ", metrics.maxTurnAroundTime, " seconds\n");
+    outputfile << "Total Turnaroundtime: " << metrics.totalturnAroundTime << " seconds\n Average Turnaround time: " << metrics.avgturnAroundTime << " seconds\n Maximum turnaround time: " << metrics.maxTurnAroundTime << " seconds\n";
+    outputfile.close();
 }
 
 std::vector<Job> buildRandomizedJobs(int jobCount, std::time_t startTime)
 {
     std::vector<Job> jobList;
-    double randomizedSubmitTime = startTime + rangeRNG(1, 10); 
-    double randomizedRequestedRunTime = rangeRNG(10, 150); 
-    double randomizedTrueRunTime = rangeRNG(10, 150);
-    double randomizedRequestedCPUs = rangeRNG(1, 10);
-    double randomizedUsedCPUs = rangeRNG(1, 10);
-    double randomizedRequestedMemory = rangeRNG(1000, 102400);
-    double randomizedUsedMemory = rangeRNG(1000, 102400);
+    double randomizedSubmitTime = startTime + rangeRNG(1, 10), randomizedRequestedRunTime = rangeRNG(10, 150), randomizedTrueRunTime = rangeRNG(10, 150);
+    double randomizedRequestedCPUs = rangeRNG(1, 10), randomizedUsedCPUs = rangeRNG(1, 10), randomizedRequestedMemory = rangeRNG(1000, 102400), randomizedUsedMemory = rangeRNG(1000, 102400);
     for(int i = 0; i < jobCount; i++)
     {
         jobList.push_back(Job(i, randomizedSubmitTime, randomizedRequestedRunTime, randomizedTrueRunTime, 
