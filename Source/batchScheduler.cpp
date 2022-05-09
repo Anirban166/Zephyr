@@ -2,15 +2,14 @@
 
 auto main(int argc, char *argv[]) -> int
 {
-    if (argc != 3)
+    if(argc != 3)
     {
-        print("Please enter the following arguments:\n");
-        print("The number of jobs to schedule.\n");
-        print("The scheduling algorithm to use.\n");
+        print("Please enter the following arguments:\nThe number of jobs to schedule.\nThe scheduling algorithm to use.\n");
+        print("Example: ./executable 10 CBF\n");
         exit(-1);
     }
     print("The arguments you entered are:\n");
-    for (int i = 0; i < argc; ++i)
+    for(int i = 0; i < argc; ++i)
     {
         print("Argument ", i, ": ", argv[i], "\n");
     }
@@ -28,31 +27,31 @@ auto main(int argc, char *argv[]) -> int
     // The nodeCount is fixed to replicate a computing cluster. No randomization here, only jobs are randomized.
     int nodeCount = 3;
     std::vector<Node> nodeList = buildNodes(nodeCount);
-    // Uncomment this to run some preset jobs that are interesting. Table 1 in the paper.
-    //  std::vector<Job> jobList = buildPresetJobs(startTime, schedulingAlgorithm);
+    // Uncomment this (and comment out line 33) to run some preset jobs: (change them as per your interest in the corresponding function below!)
+    // std::vector<Job> jobList = buildPresetJobs(startTime, schedulingAlgorithm);
     std::vector<Job> jobList = buildRandomizedJobs(jobCount, startTime);
 
     // Choose algorithm to run based on command line input:
-    if (!schedulingAlgorithm.compare("FCFS"))
+    if(!schedulingAlgorithm.compare("FCFS"))
     {
         finalizeAndOutputMetrics(runFCFS(nodeList, jobList, startTime), "FCFSMetrics.txt");
     }
-    else if (!schedulingAlgorithm.compare("SJF"))
+    else if(!schedulingAlgorithm.compare("SJF"))
     {
         finalizeAndOutputMetrics(runSJF(nodeList, jobList, startTime), "SJFMetrics.txt");
     }
-    else if (!schedulingAlgorithm.compare("EASY"))
+    else if(!schedulingAlgorithm.compare("EASY"))
     {
         finalizeAndOutputMetrics(runEASY(nodeList, jobList, startTime), "EASYMetrics.txt");
     }
-    else if (!schedulingAlgorithm.compare("CBF"))
+    else if(!schedulingAlgorithm.compare("CBF"))
     {
         finalizeAndOutputMetrics(runCBF(nodeList, jobList, startTime), "CBFMetrics.txt");
     }
-    else if (!schedulingAlgorithm.compare("ALL"))
+    else if(!schedulingAlgorithm.compare("ALL"))
     {
-        finalizeAndOutputMetrics(runFCFS(nodeList, jobList, startTime), "FCFSMetrics.txt");
         finalizeAndOutputMetrics(runSJF(nodeList, jobList, startTime), "SJFMetrics.txt");
+        finalizeAndOutputMetrics(runFCFS(nodeList, jobList, startTime), "FCFSMetrics.txt");        
         finalizeAndOutputMetrics(runEASY(nodeList, jobList, startTime), "EASYMetrics.txt");
         finalizeAndOutputMetrics(runCBF(nodeList, jobList, startTime), "CBFMetrics.txt");
     }
@@ -69,6 +68,7 @@ std::vector<Node> buildNodes(int nodeCount)
     int maxCoresPerNode = 24;
     int maxMemoryPerNode = 102400; // Allocating 100 GiB per node (102400 MiB)
 
+    // Add and customize nodes as per your requirements:
     nodeList.push_back(Node(0, maxCoresPerNode, maxMemoryPerNode));
     nodeList.push_back(Node(1, 8, 30000));
     return nodeList;
@@ -77,20 +77,16 @@ std::vector<Node> buildNodes(int nodeCount)
 std::vector<Job> buildPresetJobs(timestamp startTime, std::string algorithm)
 {
     std::vector<Job> jobList;
-    // First 5 job preset est case.
     jobList.push_back(Job(0, startTime + 1, 60, 30, 6, 6, 102400, 90000));
-    jobList.push_back(Job(1, startTime + 4, 120, 100, 8, 8, 5000, 90000));
-    jobList.push_back(Job(2, startTime + 5, 100, 95, 8, 4, 102400, 90000));
+    jobList.push_back(Job(1, startTime + 4, 120, 100, 8, 8, 5000, 10000));
+    jobList.push_back(Job(2, startTime + 5, 100, 95, 8, 4, 102400, 20000));
     jobList.push_back(Job(3, startTime + 5, 90, 50, 8, 6, 30000, 45000));
     jobList.push_back(Job(4, startTime + 8, 80, 40, 6, 6, 80000, 90000));
-
-    // Another interesting test case. Uncomment to run this.
-    //      jobList.push_back(Job(0, startTime + 1, 60, 30, 6, 6, 90000, 90000));
-    //       jobList.push_back(Job(1, startTime + 3, 120, 100, 8, 8, 80000, 90000));
-    //       jobList.push_back(Job(2, startTime + 6, 50, 95, 8, 4, 35000, 2000));
-    //       jobList.push_back(Job(3, startTime + 6, 20, 50, 8, 6, 2000, 3000));
-    //       jobList.push_back(Job(4, startTime + 8, 80, 40, 6, 6, 30000, 90000));
-    //
+    jobList.push_back(Job(5, startTime + 1, 60, 30, 6, 6, 90000, 70000));
+    jobList.push_back(Job(6, startTime + 3, 120, 100, 8, 8, 80000, 90000));
+    jobList.push_back(Job(7, startTime + 6, 50, 95, 8, 4, 35000, 2000));
+    jobList.push_back(Job(8, startTime + 9, 20, 50, 8, 6, 2000, 3000));
+    jobList.push_back(Job(9, startTime + 8, 80, 40, 6, 6, 30000, 90000));
     return jobList;
 }
 
@@ -122,18 +118,17 @@ void finalizeAndOutputMetrics(Metrics metrics, std::string fileName)
 std::vector<Job> buildRandomizedJobs(int jobCount, std::time_t startTime)
 {
     std::vector<Job> jobList;
-    for (int i = 0; i < jobCount; i++)
+    for(int i = 0; i < jobCount; i++)
     {
         double randomizedSubmitTime = startTime + rangeRNG(1, 10), randomizedRequestedRunTime = rangeRNG(10, 150), randomizedTrueRunTime = rangeRNG(10, 150);
         double randomizedRequestedCPUs = rangeRNG(1, 10), randomizedUsedCPUs = rangeRNG(1, 10), randomizedRequestedMemory = rangeRNG(1000, 102400), randomizedUsedMemory = rangeRNG(1000, 102400);
-        jobList.push_back(Job(i, randomizedSubmitTime, randomizedRequestedRunTime, randomizedTrueRunTime,
-                              randomizedRequestedCPUs, randomizedUsedCPUs, randomizedRequestedMemory, randomizedUsedMemory));
+        jobList.push_back(Job(i, randomizedSubmitTime, randomizedRequestedRunTime, randomizedTrueRunTime, randomizedRequestedCPUs, randomizedUsedCPUs, randomizedRequestedMemory, randomizedUsedMemory));
     }
     return jobList;
 }
 
 double rangeRNG(double lowerLimit, double upperLimit)
-{ // Obtaining a random number from H/W, seeding the generator using it (for run reproducibility) and using a uniform distribution:
+{   // Obtaining a random number (uniform distribution) from hardware and seeding the generator using it: (for run reproducibility)
     std::random_device randomDevice;
     std::mt19937 generator(randomDevice());
     std::uniform_int_distribution<> uniformDistributionBasedRandomNumber(lowerLimit, upperLimit);

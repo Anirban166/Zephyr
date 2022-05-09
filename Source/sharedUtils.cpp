@@ -2,7 +2,7 @@
 
 int checkNodeResources(Job waitingJob, std::vector<Node> nodeList)
 {
-    for (std::vector<Node>::iterator currentNode = nodeList.begin(); currentNode != nodeList.end(); currentNode++)
+    for(std::vector<Node>::iterator currentNode = nodeList.begin(); currentNode != nodeList.end(); currentNode++)
     {
         Node currNodeObj = (*currentNode);
         int coresAvailable = currNodeObj.coreCount - currNodeObj.coresAllocated;
@@ -17,11 +17,11 @@ int checkNodeResources(Job waitingJob, std::vector<Node> nodeList)
 int isJobValid(Job waitingJob, std::vector<Node> nodeList)
 {
     int nodeID = -1;
-    for (std::vector<Node>::iterator currentNode = nodeList.begin(); currentNode != nodeList.end(); ++currentNode)
+    for(std::vector<Node>::iterator currentNode = nodeList.begin(); currentNode != nodeList.end(); ++currentNode)
     {
-        if ((waitingJob.requestedCPUs <= (*currentNode).coreCount) && (waitingJob.requestedMemory <= (*currentNode).memoryAmount))
+        if((waitingJob.requestedCPUs <= (*currentNode).coreCount) && (waitingJob.requestedMemory <= (*currentNode).memoryAmount))
         {
-            // print("Returning available node with id: ", (*currentNode).nodeID, " for job: ", waitingJob.jobNum, "\n");
+            // print("Returning available node with ID: ", (*currentNode).nodeID, " for job: ", waitingJob.jobNum, "\n");
             nodeID = (*currentNode).nodeID;
             return nodeID;
         }
@@ -31,15 +31,15 @@ int isJobValid(Job waitingJob, std::vector<Node> nodeList)
 }
 
 // Takes the target node to run on and determines if we can be backfilled into it based on currently running jobs.
-bool canFinishBeforeShadowCBF(std::vector<Job> runningJobs, timestamp reqRuntime, int targetNodeId, timestamp currentTime)
+bool canFinishBeforeShadowCBF(std::vector<Job> runningJobs, timestamp reqRuntime, int targetNodeID, timestamp currentTime)
 {
-    Job preceedingJob = Job(-69, -1, 6000000000000, 69, 343324, 78, 90239, 5646346);
-    for (std::vector<Job>::iterator runningJob = runningJobs.begin(); runningJob != runningJobs.end(); ++runningJob)
+    Job preceedingJob = Job(-69, -1, 420694206942069, 69, 420420, 69, 42069, 6942069);
+    for(std::vector<Job>::iterator runningJob = runningJobs.begin(); runningJob != runningJobs.end(); ++runningJob)
     {
-        if ((*runningJob).nodeID == targetNodeId)
+        if((*runningJob).nodeID == targetNodeID)
         {
             preceedingJob = (*runningJob);
-            if (((preceedingJob.startTime + preceedingJob.requestedRunTime) - currentTime) < reqRuntime)
+            if(((preceedingJob.startTime + preceedingJob.requestedRunTime) - currentTime) < reqRuntime)
             {
                 return false;
             }
@@ -47,42 +47,38 @@ bool canFinishBeforeShadowCBF(std::vector<Job> runningJobs, timestamp reqRuntime
         }
     }
     // Couldn't find any other jobs, this should not happen!
-    print("THIS SHOULD NOT HAPPEN: canFinishBeforeShadowCBF found no jobs to backfill into!\n");
+    print("Talk about stuff being broken - canFinishBeforeShadowCBF() found no jobs to backfill into!\n");
     return true;
 }
 
-timestamp findShadowTimeFromPreceedingJobs(std::vector<Job> runningJobs, int targetNodeId)
+timestamp findShadowTimeFromPreceedingJobs(std::vector<Job> runningJobs, int targetNodeID)
 {
     int jobNum = -999;
     // timestamp shadowTime = -999;
-    Job preceedingJob = Job(-69, -1, 6000000000000, 69, 343324, 78, 90239, 5646346);
-    for (std::vector<Job>::iterator runningJob = runningJobs.begin(); runningJob != runningJobs.end(); ++runningJob)
+    Job preceedingJob = Job(-69, -1, 420694206942069, 69, 420420, 69, 42069, 6942069);
+    for(std::vector<Job>::iterator runningJob = runningJobs.begin(); runningJob != runningJobs.end(); ++runningJob)
     {
-        if ((*runningJob).nodeID == targetNodeId)
+        if((*runningJob).nodeID == targetNodeID)
         {
             jobNum = (*runningJob).jobNum;
             preceedingJob = (*runningJob);
         }
     }
-    // If we found a job use its times to make our shadow time
-    if (jobNum > -1)
+    // If a job is found, use its start + requested runtime to make our shadow time:
+    if(jobNum > -1)
     {
-        // JOB MAY NOT BE RUNNING YET, NEED TO NOTIFY JOBS IN RESERVE QUEUE WHEN A JOB STARTS RUNNING。
+        // Job may not be running yet -> need to notify jobs in reserve queue when a job starts running.
         return preceedingJob.startTime + preceedingJob.requestedRunTime;
     }
-    // A job is not running
-    return NO_SHADOW_TIME_ASSIGNED;
+    return NO_SHADOW_TIME_ASSIGNED; // A job is not running.
 }
 
 // Loops through the reserving list and provides a shadow time to the next process that is waiting on this node.
-void updateShadowTimeOfNext(std::vector<Job> reservingJobs, Job selectedJob, int targetNodeId)
+void updateShadowTimeOfNext(std::vector<Job> reservingJobs, Job selectedJob, int targetNodeID)
 {
-    // int jobNum = -999;
-    // timestamp shadowTime = -999;
-    // Job nextJob = Job(-69, -1, 6000000000000, 69, 343324, 78, 90239, 5646346);
-    for (std::vector<Job>::iterator reservingJob = reservingJobs.begin(); reservingJob != reservingJobs.end(); ++reservingJob)
+    for(std::vector<Job>::iterator reservingJob = reservingJobs.begin(); reservingJob != reservingJobs.end(); ++reservingJob)
     {
-        if ((*reservingJob).nodeID == targetNodeId)
+        if((*reservingJob).nodeID == targetNodeID)
         {
             (*reservingJob).shadowTime = (selectedJob.startTime + selectedJob.requestedRunTime);
             return;
@@ -90,23 +86,11 @@ void updateShadowTimeOfNext(std::vector<Job> reservingJobs, Job selectedJob, int
     }
 }
 
-void printReservedJobs(std::vector<Job> jobs)
-{
-    int count = 0;
-    print("[");
-    for (std::vector<Job>::iterator currJob = jobs.begin(); currJob != jobs.end(); ++currJob)
-    {
-        print("( ", count, "th job in list: ", (*currJob).jobNum, " requires: ", (*currJob).requestedRunTime, " seconds. Shadow Time: ", (*currJob).shadowTime, " ) ");
-        count++;
-    }
-    print("]\n");
-}
-
 void printJobs(std::vector<Job> jobs)
 {
     int count = 0;
     print("[");
-    for (std::vector<Job>::iterator currJob = jobs.begin(); currJob != jobs.end(); ++currJob)
+    for(std::vector<Job>::iterator currJob = jobs.begin(); currJob != jobs.end(); ++currJob)
     {
         print("( ", count, "th job in list: ", (*currJob).jobNum, " requires: ", (*currJob).requestedRunTime, " seconds.", " ) ");
         count++;
@@ -114,26 +98,26 @@ void printJobs(std::vector<Job> jobs)
     print("]\n");
 }
 
-void printJobsToFile(std::vector<Job> jobs, std::ostream file)
+void printReservedJobs(std::vector<Job> jobs)
 {
     int count = 0;
-    file << "[";
-    for (std::vector<Job>::iterator currJob = jobs.begin(); currJob != jobs.end(); ++currJob)
+    print("[");
+    for(std::vector<Job>::iterator currJob = jobs.begin(); currJob != jobs.end(); ++currJob)
     {
-        file << count << "th job in list: " << (*currJob).jobNum << " requires: " << (*currJob).requestedRunTime << " seconds,";
+        print("( ", count, "th job in list: ", (*currJob).jobNum, " requires: ", (*currJob).requestedRunTime, " seconds. Shadow Time: ", (*currJob).shadowTime, " ) ");
         count++;
     }
-    file << "]\n";
+    print("]\n");
 }
 
 std::vector<Job> verifyJobs(std::vector<Job> jobList, std::vector<Node> nodeList)
 {
     // First check if any jobs are ready to be added to the queue:
-    for (std::vector<Job>::iterator currentJobIter = std::prev(jobList.end()); currentJobIter != std::prev(jobList.begin()); --currentJobIter)
+    for(std::vector<Job>::iterator currentJobIter = std::prev(jobList.end()); currentJobIter != std::prev(jobList.begin()); --currentJobIter)
     {
         Job currentJob = *currentJobIter;
         // Check if it is possible to service this request at all: (based on the maximum resources we have available)
-        if (isJobValid(currentJob, nodeList) == -1)
+        if(isJobValid(currentJob, nodeList) == -1)
         {
             print("Erasing job: ", currentJob.jobNum, "\n");
             // Discard job if infeasible:

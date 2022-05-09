@@ -15,9 +15,9 @@ const int NO_JOB_RESERVING = -1;
 const int NO_SHADOW_TIME_ASSIGNED = -99;
 enum STATUS
 {
-  RUNNING,
-  WAITING,
   QUEUED,
+  WAITING,  
+  RUNNING,  
   CANCELLED
 };
 template <typename... T>
@@ -31,88 +31,80 @@ void print(T &&...args)
 // 1.1) Job Class
 class Job
 {
-public:
-  int jobNum;                          // Unique job identifier
-  int nodeID;                          // Node at which the job is running (multiple jobs can have one nodeId)
-  double stretch;                      // Slowdown (wait time + run time)/runtime
-  timestamp waitTime;                  // Difference between startTime and submitTime                           //
-  timestamp stopTime;                  // Sum of startTime and trueRunTime
-  timestamp startTime;                 // Time the job actually starts running on CPU(s)
-  timestamp submitTime;                // Time the job was submitted by the user
-  timestamp trueRunTime;               // Generated statically when creating job to simulate the amount of time actually needed
-  timestamp turnAroundTime;            // Difference between the times of job submission and completion
-  timestamp requestedRunTime;          // User requested (on job creation) job run time
-  timestamp shadowTime;                // Time that this job is guaranteed to start running
-  STATUS jobStatus = WAITING;          // Current state of the job (default is wait mode)
-  double requestedCPUs, usedCPUs;      // Requested and actually used CPU cores
-  double requestedMemory, usedMemory;  // Requested and actually used memory (GiB)
-  int userId, groupId, precedingJobId; // Identifiers for additional filtering
+  public:
+    int jobNum;                          // Unique job identifier
+    int nodeID;                          // Node at which the job is running (multiple jobs can have one nodeID)
+    double stretch;                      // Slowdown (wait time + run time)/runtime
+    timestamp waitTime;                  // Difference between startTime and submitTime
+    timestamp stopTime;                  // Sum of startTime and trueRunTime
+    timestamp startTime;                 // Time the job actually starts running on CPU(s)
+    timestamp submitTime;                // Time the job was submitted by the user
+    timestamp shadowTime;                // Time that a particular job is guaranteed to start running    
+    timestamp trueRunTime;               // Generated statically when creating job to simulate the amount of time actually needed
+    timestamp turnAroundTime;            // Difference between the times of job submission and completion
+    timestamp requestedRunTime;          // User requested (on job creation) job run time
+    STATUS jobStatus = WAITING;          // Current state of the job (default is wait mode)
+    double requestedCPUs, usedCPUs;      // Requested and actually used CPU cores
+    double requestedMemory, usedMemory;  // Requested and actually used memory (GiB)
+    int userId, groupId, precedingJobId; // Identifiers for additional filtering
   // std::vector<timestamp> cpuTimes;
 
   // Constructor:
-  Job(int jobNum,
-      std::time_t submitTime,
-      std::time_t requestedRunTime,
-      std::time_t trueRunTime,
-      double requestedCPUs,
-      double usedCPUs,
-      double requestedMemory,
-      double usedMemory)
-  {
-    this->jobNum = jobNum;
-    this->usedCPUs = usedCPUs;
-    this->usedMemory = usedMemory;
-    this->submitTime = submitTime;
-    this->trueRunTime = trueRunTime;
-    this->requestedCPUs = requestedCPUs;
-    this->requestedMemory = requestedMemory;
-    this->requestedRunTime = requestedRunTime;
-  }
+    Job(int jobNum, std::time_t submitTime, std::time_t requestedRunTime, std::time_t trueRunTime, double requestedCPUs, double usedCPUs, double requestedMemory, double usedMemory)
+    {
+      this->jobNum = jobNum;
+      this->usedCPUs = usedCPUs;
+      this->usedMemory = usedMemory;
+      this->submitTime = submitTime;
+      this->trueRunTime = trueRunTime;
+      this->requestedCPUs = requestedCPUs;
+      this->requestedMemory = requestedMemory;
+      this->requestedRunTime = requestedRunTime;
+    }
 };
 // 1.2) Node Class
 class Node
 {
-public:
-  int nodeID;              // Node identifier
-  int coreCount;           // Total cores in the node
-  int memoryAmount;        // Total memory in the node (in GiB)
-  int coresAllocated = 0;  // Cores used by a job (constrained by above parameters)
-  int memoryAllocated = 0; // Memory used by a job (constrained by above parameters)
+  public:
+    int nodeID;              // Node identifier
+    int coreCount;           // Total cores in the node
+    int memoryAmount;        // Total memory in the node (in GiB)
+    int coresAllocated = 0;  // Cores used by a job (constrained by above parameters)
+    int memoryAllocated = 0; // Memory used by a job (constrained by above parameters)
   // Constructor:
-  Node(int nodeID, int coreCount, int memoryAmount)
-  {
-    this->nodeID = nodeID;
-    this->coreCount = coreCount;
-    this->memoryAmount = memoryAmount;
-  }
+    Node(int nodeID, int coreCount, int memoryAmount)
+    {
+      this->nodeID = nodeID;
+      this->coreCount = coreCount;
+      this->memoryAmount = memoryAmount;
+    }
 };
 // 1.2) Metrics Class
 class Metrics
 {
-public:
-  std::string algorithm;
-  timestamp totalWaitSum = 0;
-  timestamp averageWait = 0;
-  timestamp longestWait = 0;
-  timestamp avgturnAroundTime = 0;
-  timestamp totalturnAroundTime = 0;
-  timestamp maxTurnAroundTime = 0;
-  double avgStretch = 0;
-  double totalStretch = 0;
-  double maxStretch = 0;
-  int totalCPUsUsed = 0;
-  // int totalCPUsReqd = 0;
-  int maxCPUsUsed = 0;
-  unsigned long totalMemoryUsed = 0;
-  unsigned long maxMemoryUsed = 0;
-  int averageCPUsUsed = 0;
-  unsigned long averageMemoryUsed = 0;
-  int totalJobsRun = 0;
-  // Constructor:
-  Metrics(std::string algorithm)
-  {
-    this->algorithm = algorithm;
-  }
+  public:
+    int maxCPUsUsed = 0;    
+    int totalJobsRun = 0;    
+    int totalCPUsUsed = 0;
+    double avgStretch = 0;
+    double maxStretch = 0;
+    std::string algorithm;
+    int averageCPUsUsed = 0;        
+    double totalStretch = 0;
+    timestamp averageWait = 0;
+    timestamp longestWait = 0;
+    timestamp totalWaitSum = 0;    
+    timestamp avgturnAroundTime = 0;
+    timestamp maxTurnAroundTime = 0;
+    unsigned long maxMemoryUsed = 0;        
+    timestamp totalturnAroundTime = 0;
+    unsigned long totalMemoryUsed = 0;
+    unsigned long averageMemoryUsed = 0;
+    // Constructor:
+    Metrics(std::string algorithm)
+    {
+      this->algorithm = algorithm;
+    }
 };
 
 // ----------------------
@@ -156,10 +148,10 @@ Metrics runAlgorithm(std::string selectedAlgorithm);
 // 2.8.2) Function to return the shadow time from the preeceding jobs:
 timestamp findShadowTimeFromPreceedingJobs(std::vector<Job> runningJobs, int targetNodeId);
 // 2.9) Miscellaneous:
-// 2.9.1) Function to update the shadow time of the next waiting job:
-void updateShadowTimeOfNext(std::vector<Job> reservingJobs, Job selectedJob, int targetNodeId);
-// 2.9.2) Function to generate random numbers (from the uniform distribution) in a range:
+// 2.9.1) Function to generate random numbers (from the uniform distribution) in a range:
 double rangeRNG(double lowerLimit, double upperLimit);
+// 2.9.2) Function to update the shadow time of the next waiting job:
+void updateShadowTimeOfNext(std::vector<Job> reservingJobs, Job selectedJob, int targetNodeId);
 
 // Iterator notes:
 // We are currently iterating on the reverse since erase() moves everything to the left to fill the hole.
