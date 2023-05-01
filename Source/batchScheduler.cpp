@@ -2,10 +2,10 @@
 
 auto main(int argc, char *argv[]) -> int
 {
-    if(argc != 3)
+    if(argc != 4)
     {
-        print("Please enter the following arguments:\nThe number of jobs to schedule.\nThe scheduling algorithm to use.\n");
-        print("Example: ./executable 10 CBF\n");
+        print("Incorrect arguments. Please enter the following:\nThe number of jobs to schedule.\nThe scheduling algorithm to use.\nMode: use 0 for standard use, or 1 for debugging.\n");
+        print("Example: ./test.bin 10 CBF 0\n");
         exit(-1);
     }
     print("The arguments you entered are:\n");
@@ -15,6 +15,7 @@ auto main(int argc, char *argv[]) -> int
     }
     int jobCount = atoi(argv[1]);
     std::string schedulingAlgorithm = argv[2];
+    int mode = atoi(argv[3]);
 
     // Get the current time to reference as a start point for the entire simulation:
     time_point<system_clock, seconds> startTimePoint = time_point_cast<seconds>(system_clock::now());
@@ -34,26 +35,26 @@ auto main(int argc, char *argv[]) -> int
     // Choose algorithm to run based on command line input:
     if(!schedulingAlgorithm.compare("FCFS"))
     {
-        finalizeAndOutputMetrics(runFCFS(nodeList, jobList, startTime), "FCFSMetrics.txt");
+        finalizeAndOutputMetrics(runFCFS(nodeList, jobList, startTime, mode), "FCFSMetrics.txt");
     }
     else if(!schedulingAlgorithm.compare("SJF"))
     {
-        finalizeAndOutputMetrics(runSJF(nodeList, jobList, startTime), "SJFMetrics.txt");
+        finalizeAndOutputMetrics(runSJF(nodeList, jobList, startTime, mode), "SJFMetrics.txt");
     }
     else if(!schedulingAlgorithm.compare("EASY"))
     {
-        finalizeAndOutputMetrics(runEASY(nodeList, jobList, startTime), "EASYMetrics.txt");
+        finalizeAndOutputMetrics(runEASY(nodeList, jobList, startTime, mode), "EASYMetrics.txt");
     }
     else if(!schedulingAlgorithm.compare("CBF"))
     {
-        finalizeAndOutputMetrics(runCBF(nodeList, jobList, startTime), "CBFMetrics.txt");
+        finalizeAndOutputMetrics(runCBF(nodeList, jobList, startTime, mode), "CBFMetrics.txt");
     }
     else if(!schedulingAlgorithm.compare("ALL"))
     {
-        finalizeAndOutputMetrics(runSJF(nodeList, jobList, startTime), "SJFMetrics.txt");
-        finalizeAndOutputMetrics(runFCFS(nodeList, jobList, startTime), "FCFSMetrics.txt");        
-        finalizeAndOutputMetrics(runEASY(nodeList, jobList, startTime), "EASYMetrics.txt");
-        finalizeAndOutputMetrics(runCBF(nodeList, jobList, startTime), "CBFMetrics.txt");
+        finalizeAndOutputMetrics(runSJF(nodeList, jobList, startTime, mode), "SJFMetrics.txt");
+        finalizeAndOutputMetrics(runFCFS(nodeList, jobList, startTime, mode), "FCFSMetrics.txt");        
+        finalizeAndOutputMetrics(runEASY(nodeList, jobList, startTime, mode), "EASYMetrics.txt");
+        finalizeAndOutputMetrics(runCBF(nodeList, jobList, startTime, mode), "CBFMetrics.txt");
     }
     else
     {

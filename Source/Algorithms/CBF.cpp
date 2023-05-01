@@ -1,6 +1,6 @@
 #include "../batchScheduler.h"
 
-Metrics runCBF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp startTime)
+Metrics runCBF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp startTime, int mode)
 {
     std::ofstream outputfile("CBFOutput.txt", std::ios::trunc);
     std::vector<Job> jobQueue;
@@ -9,7 +9,7 @@ Metrics runCBF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp s
     std::vector<Job> reservingJobs;
     timestamp currentTime(startTime);
 
-    print("Running the CBF scheduling algorithm.\n");
+    if(mode) print("Running the CBF scheduling algorithm.\n");
     outputfile << "Running the CBF scheduling algorithm.\n";
     int simIteration = 0;
     jobList = verifyJobs(jobList, nodeList);
@@ -18,8 +18,11 @@ Metrics runCBF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp s
 
     while(!simulationFinished(jobList, jobQueue, runningJobs))
     {
-        print("CBF scheduling iteration number: ", simIteration, "\n", "Reserving jobs: ");
-        printReservedJobs(reservingJobs);
+        if(mode) 
+        {
+            print("CBF scheduling iteration number: ", simIteration, "\n", "Reserving jobs: ");
+            printReservedJobs(reservingJobs);
+        }    
         outputfile << "CBF scheduling iteration number: " << simIteration << "\n";
         // First check if any jobs are ready to be added to the queue:
         if(jobList.size())
@@ -46,7 +49,7 @@ Metrics runCBF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp s
         std::reverse(jobQueue.begin(), jobQueue.end());
 
         outputfile << "Sorted job queue: ";
-        printJobs(jobQueue);
+        if(mode) printJobs(jobQueue);
 
         if(runningJobs.size())
         {
@@ -123,7 +126,7 @@ Metrics runCBF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp s
                 if(std::find_if(reservingJobs.begin(), reservingJobs.end(), [&](Job const &job)
                 { return job.jobNum == selectedJob.jobNum; }) != reservingJobs.end())
                 {
-                    print("Selected Job (#", selectedJob.jobNum, ") started removing itself from the queue for reserved jobs!");
+                    if(mode) print("Selected Job (#", selectedJob.jobNum, ") started removing itself from the queue for reserved jobs!");
                     // reservingJobs.erase(waitingJob);
                     for(std::vector<Job>::iterator reservingJob = reservingJobs.begin(); reservingJob != reservingJobs.end(); ++reservingJob)
                     {
@@ -133,7 +136,7 @@ Metrics runCBF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp s
                             break;
                         }
                     }
-                    print("Selected Job: (#", selectedJob.jobNum, ") removed itself from the queue for reserved jobs!");
+                    if(mode) print("Selected Job: (#", selectedJob.jobNum, ") removed itself from the queue for reserved jobs!");
                 }
 
                 // Notify the next job waiting for our node, if it exists.
@@ -144,7 +147,7 @@ Metrics runCBF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp s
                         if((*reservingJob).nodeID == selectedJob.nodeID)
                         {
                             (*reservingJob).shadowTime = (selectedJob.startTime + selectedJob.requestedRunTime);
-                            print("Job ", selectedJob.jobNum, " updated shadow time of job ", (*reservingJob).jobNum, "\n");
+                            if(mode) print("Job ", selectedJob.jobNum, " updated shadow time of job ", (*reservingJob).jobNum, "\n");
                             break;
                         }
                     }

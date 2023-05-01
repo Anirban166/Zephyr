@@ -1,6 +1,6 @@
 #include "../batchScheduler.h"
 
-Metrics runEASY(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp startTime)
+Metrics runEASY(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp startTime, int mode)
 {
     std::ofstream outputfile("EASYOutput.txt", std::ios::trunc);
     const int noJobReservation = -1;
@@ -44,7 +44,7 @@ Metrics runEASY(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp 
         std::reverse(jobQueue.begin(), jobQueue.end());
 
         outputfile << "Sorted job queue: ";
-        printJobs(jobQueue);
+        if(mode) printJobs(jobQueue);
 
         if(runningJobs.size())
         {

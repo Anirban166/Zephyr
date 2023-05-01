@@ -1,11 +1,11 @@
 #include "../batchScheduler.h"
 
-Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp startTime)
+Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp startTime, int mode)
 {
     std::vector<Job> jobQueue;
     std::vector<Job> runningJobs;
     std::vector<Job> finalJobList;
-    print("Running the FCFS scheduling algorithm.\n");
+    if(mode) print("Running the FCFS scheduling algorithm.\n");
     timestamp currentTime = startTime;
     int simIteration = 0;
     jobList = verifyJobs(jobList, nodeList);
@@ -14,7 +14,7 @@ Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp 
 
     while(!simulationFinished(jobList, jobQueue, runningJobs))
     {
-        print("FCFS scheduling iteration number: ", simIteration, "\n");
+        if(mode) print("FCFS scheduling iteration number: ", simIteration, "\n");
         // First check if any jobs are ready to be added to the queue:
         if(jobList.size())
         {
@@ -37,8 +37,11 @@ Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp 
         { return lhs.submitTime > rhs.submitTime; });
         // Reversing items in container to switch the order to descending:
         std::reverse(jobQueue.begin(), jobQueue.end());
-        print("Sorted job queue:\n");
-        printJobs(jobQueue);
+        if(mode) 
+        {
+            print("Sorted job queue:\n");
+            printJobs(jobQueue);
+        }    
 
         if(runningJobs.size())
         {
@@ -47,7 +50,7 @@ Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp 
             {
                 if(currentTime == ((*runningJob).startTime + (*runningJob).trueRunTime))
                 {
-                    print("Job ", (*runningJob).jobNum, " finished running on node ", (*runningJob).nodeID, "\n");
+                    if(mode) print("Job ", (*runningJob).jobNum, " finished running on node ", (*runningJob).nodeID, "\n");
                     (*runningJob).stopTime = currentTime;
                     finalJobList.push_back((*runningJob));
 
@@ -94,10 +97,12 @@ Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp 
                 selectedJob.nodeID = selectedNodeID;
                 runningJobs.push_back(selectedJob);
 
-                print("Running job ", selectedJob.jobNum, " with a submit time of: ", selectedJob.submitTime, " seconds on node: ", selectedNodeID, "\n");
-                print("Running job ", selectedJob.jobNum, " with a start time of: ", selectedJob.startTime, " seconds\n");
-                print("Running job ", selectedJob.jobNum, " with a requested job runtime of: ", selectedJob.requestedRunTime, " seconds\n");
-
+                if(mode) 
+                {
+                    print("Running job ", selectedJob.jobNum, " with a submit time of: ", selectedJob.submitTime, " seconds on node: ", selectedNodeID, "\n");
+                    print("Running job ", selectedJob.jobNum, " with a start time of: ", selectedJob.startTime, " seconds\n");
+                    print("Running job ", selectedJob.jobNum, " with a requested job runtime of: ", selectedJob.requestedRunTime, " seconds\n");
+                }    
                 // Calculate the number of cores actually being used, in addition to the requested number:
                 int numCPUsInUse = 0;
                 unsigned long memoryInUse = 0;

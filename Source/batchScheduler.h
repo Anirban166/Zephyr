@@ -9,10 +9,12 @@
 #include <fstream>
 #include <iostream>
 #include <algorithm>
+
 using namespace std::chrono;
 using timestamp = std::time_t;
 const int NO_JOB_RESERVING = -1;
 const int NO_SHADOW_TIME_ASSIGNED = -99;
+
 enum STATUS
 {
   QUEUED,
@@ -20,11 +22,13 @@ enum STATUS
   RUNNING,  
   CANCELLED
 };
+
 template <typename... T>
 void print(T &&...args)
 {
   ((std::cout << args), ...);
 }
+
 // --------------
 // 1.0: Classes
 // --------------
@@ -62,6 +66,7 @@ class Job
       this->requestedRunTime = requestedRunTime;
     }
 };
+
 // 1.2) Node Class
 class Node
 {
@@ -79,6 +84,7 @@ class Node
       this->memoryAmount = memoryAmount;
     }
 };
+
 // 1.2) Metrics Class
 class Metrics
 {
@@ -167,10 +173,10 @@ void updateShadowTimeOfNext(std::vector<Job> reservingJobs, Job selectedJob, int
 // 3.0: Scheduling Algorithms
 // --------------------------
 // 3.1) Shortest Job First (SJF)
-Metrics runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime);
+Metrics runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime, int mode);
 // 3.2) First Come First Serve (FCFS)
-Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime);
+Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime, int mode);
 // 3.3) Extensible Argonne Scheduling System (EASY)
-Metrics runEASY(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime);
+Metrics runEASY(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime, int mode);
 // 3.4) Extensible Argonne Scheduling System (CBF)
-Metrics runCBF(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime);
+Metrics runCBF(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime, int mode);

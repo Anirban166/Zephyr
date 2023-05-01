@@ -1,11 +1,11 @@
 #include "../batchScheduler.h"
 
-Metrics runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp startTime)
+Metrics runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp startTime, int mode)
 {
     std::vector<Job> jobQueue;
     std::vector<Job> runningJobs;
     std::vector<Job> finalJobList;
-    print("Running the SJF scheduling algorithm.\n");
+    if(mode) print("Running the SJF scheduling algorithm.\n");
     timestamp currentTime = startTime;
     int simIteration = 0;
     jobList = verifyJobs(jobList, nodeList);
@@ -14,7 +14,7 @@ Metrics runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp s
 
     while(!simulationFinished(jobList, jobQueue, runningJobs))
     {
-        print("SJF scheduling iteration number: ", simIteration, "\n");
+        if(mode) print("SJF scheduling iteration number: ", simIteration, "\n");
         // First check if any jobs are ready to be added to the queue:
         if(jobList.size())
         {
@@ -38,7 +38,7 @@ Metrics runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp s
             {
                 if(currentTime == ((*runningJob).startTime + (*runningJob).trueRunTime))
                 {
-                    print("Job ", (*runningJob).jobNum, " finished running on node ", (*runningJob).nodeID, "\n");
+                    if(mode) print("Job ", (*runningJob).jobNum, " finished running on node ", (*runningJob).nodeID, "\n");
                     (*runningJob).stopTime = currentTime;
                     finalJobList.push_back((*runningJob));
 
@@ -55,8 +55,11 @@ Metrics runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp s
         std::sort(jobQueue.begin(), jobQueue.end(), [](const auto &lhs, const auto &rhs)
         { return lhs.requestedRunTime < rhs.requestedRunTime; });
         // Reversing items in container to switch the order to descending:
-        std::cout << "Sorted job queue: \n";
-        printJobs(jobQueue);
+        if(mode) 
+        {
+            std::cout << "Sorted job queue: \n";
+            printJobs(jobQueue);
+        }    
 
         std::vector<Job> waitingList;
         bool preceedingJobScheduled = true;
@@ -92,10 +95,12 @@ Metrics runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp s
                 selectedJob.nodeID = selectedNodeID;
                 runningJobs.push_back(selectedJob);
 
-                print("Running job ", selectedJob.jobNum, " with a submit time of: ", selectedJob.submitTime, " on node: ", selectedNodeID, "\n");
-                print("Running job ", selectedJob.jobNum, " with a start time of: ", selectedJob.startTime, "\n");
-                print("Running job ", selectedJob.jobNum, " with a requested job runtime of: ", selectedJob.requestedRunTime, "\n");
-
+                if(mode)
+                {
+                    print("Running job ", selectedJob.jobNum, " with a submit time of: ", selectedJob.submitTime, " on node: ", selectedNodeID, "\n");
+                    print("Running job ", selectedJob.jobNum, " with a start time of: ", selectedJob.startTime, "\n");
+                    print("Running job ", selectedJob.jobNum, " with a requested job runtime of: ", selectedJob.requestedRunTime, "\n");
+                }
                 // Calculate the number of cores actually being used, in addition to the requested number:
                 int numCPUsInUse = 0;
                 unsigned long memoryInUse = 0;
