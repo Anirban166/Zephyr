@@ -1,12 +1,13 @@
 #pragma once
 #include <ctime>
 #include <cmath>
+#include <string>
 #include <random>
 #include <chrono>
 #include <vector>
 #include <cstdlib>
-#include <cstring>
 #include <fstream>
+#include <sstream>
 #include <iostream>
 #include <algorithm>
 
@@ -29,10 +30,10 @@ void print(T &&...args)
   ((std::cout << args), ...);
 }
 
-// --------------
-// 1.0: Classes
-// --------------
-// 1.1) Job Class
+// -------
+// Classes
+// -------
+
 class Job
 {
   public:
@@ -51,9 +52,7 @@ class Job
     double requestedCPUs, usedCPUs;      // Requested and actually used CPU cores
     double requestedMemory, usedMemory;  // Requested and actually used memory (GiB)
     int userId, groupId, precedingJobId; // Identifiers for additional filtering
-  // std::vector<timestamp> cpuTimes;
 
-  // Constructor:
     Job(int jobNum, std::time_t submitTime, std::time_t requestedRunTime, std::time_t trueRunTime, double requestedCPUs, double usedCPUs, double requestedMemory, double usedMemory)
     {
       this->jobNum = jobNum;
@@ -67,7 +66,6 @@ class Job
     }
 };
 
-// 1.2) Node Class
 class Node
 {
   public:
@@ -76,7 +74,7 @@ class Node
     int memoryAmount;        // Total memory in the node (in GiB)
     int coresAllocated = 0;  // Cores used by a job (constrained by above parameters)
     int memoryAllocated = 0; // Memory used by a job (constrained by above parameters)
-  // Constructor:
+
     Node(int nodeID, int coreCount, int memoryAmount)
     {
       this->nodeID = nodeID;
@@ -85,7 +83,6 @@ class Node
     }
 };
 
-// 1.2) Metrics Class
 class Metrics
 {
   public:
@@ -106,67 +103,80 @@ class Metrics
     timestamp totalturnAroundTime = 0;
     unsigned long totalMemoryUsed = 0;
     unsigned long averageMemoryUsed = 0;
-    // Constructor:
+
     Metrics(std::string algorithm)
     {
       this->algorithm = algorithm;
     }
 };
 
-// ----------------------
-// 2.0: Utility Functions
-// ----------------------
-// 2.1) Functions to build stuff:
-// 2.1.1) Build nodes and return a vector of all the available nodes:
-std::vector<Node> buildNodes(int nodeCount);
-// 2.1.2) Build preset jobs and return a vector of all the jobs:
-std::vector<Job> buildPresetJobs(std::time_t startTime, std::string algorithm);
-// 2.1.3) Build randomized parameters for a specified (input) number of jobs:
+// -----------------
+// Utility Functions
+// -----------------
+
+// Builds nodes from the source string and returns a vector of all the available nodes:
+std::vector<Node> buildNodes(std::string nodeSource);
+
+// Loads preset jobs from a CSV and returns a vector of all the jobs:
+std::vector<Job> buildPresetJobs(std::string filename, std::time_t startTime);
+
+// Generates randomized parameters for a specified (input) number of jobs:
 std::vector<Job> buildRandomizedJobs(int jobCount, std::time_t startTime);
-// 2.2) Checks for job validity, returns node ID for whichever node first has the requested resources under its maximum bounds,
-// otherwise -1 if the request is above the limits for all the nodes:
+
+// Checks for job validity, returns node ID for whichever node first has the requested resources under its maximum bounds, otherwise -1 if the request is above the limits for all the nodes:
 int isJobValid(Job waitingJob, std::vector<Node> nodeList);
-// 2.3) Returns node ID for whichever node has the required resources for the job that requests it,
-// otherwise if all nodes can't satisfy the resource requirements, it returns a -1:
+
+// Returns node ID for whichever node has the required resources for the job that requests it, otherwise if all nodes can't satisfy the resource requirements, it returns a -1:
 int checkNodeResources(Job waitingJob, std::vector<Node> nodeList);
-// 2.4) Function to verify the feasibility of jobs:
+
+// Verifies the feasibility of jobs:
 std::vector<Job> verifyJobs(std::vector<Job> jobList, std::vector<Node> nodeList);
-// 2.5) Function to indicate the end of simulation, when the joblist and queues are empty at the very end:
+
+// Indicates the end of simulation when the joblist and queues are empty at the very end:
 bool simulationFinished(std::vector<Job> jobList, std::vector<Job> jobQueue, std::vector<Job> runningJobs);
-// 2.6) Functions to print stuff:
-// 2.6.1) Function to print jobs:
+
+// Prints jobs:
 void printJobs(std::vector<Job> jobs);
-// void printJobsToFile(std::vector<Job> jobs, std::ofstream file);
-// 2.6.2) Function to print reserved jobs:
+
+// Prints reserved jobs:
 void printReservedJobs(std::vector<Job> jobs);
-// 2.6.3) Function to print the finalized (post operations such as taking the average) metrics that we are concerned with:
+
+// Prints the finalized (post operations such as taking the average) metrics that we are concerned with:
 void finalizeAndOutputMetrics(Metrics metrics, std::string fileName);
-// 2.7) Conditionals:
-// 2.7.1) Function to indicate if a job can finish before the time at which the first job in the queue finishes execution:
+
+// Indicates if a job can finish before the time at which the first job in the queue finishes execution:
 bool canFinishBeforeShadow(timestamp shadowTime, timestamp reqRuntime, timestamp currentTime);
-// 2.7.2) Special case of the above for conservative backfilling:
+
+// Special case of the function above, for conservative backfilling:
 bool canFinishBeforeShadowCBF(std::vector<Job> runningJobs, timestamp reqRuntime, int targetNodeId, timestamp currentTime);
-// 2.7.3) Function to reserve jobs:
+
+// Reserves jobs:
 bool jobsReserving(std::vector<Job> jobQueue);
-// 2.8) Metrics or timestamp returning functions:
-// 2.8.1) Function to run the input scheduling algorithm and return the metrics for the simulated run of the selected algorithm:
+
+// Runs the input scheduling algorithm and returns the metrics for the simulated run of the selected algorithm:
 Metrics runAlgorithm(std::string selectedAlgorithm);
-// 2.8.2) Function to return the shadow time from the preeceding jobs:
+
+// Returns the shadow time from the preeceding jobs:
 timestamp findShadowTimeFromPreceedingJobs(std::vector<Job> runningJobs, int targetNodeId);
-// 2.9) Miscellaneous:
-// 2.9.1) Function to generate random numbers (from the uniform distribution) in a range:
+
+// Generates random numbers (from the uniform distribution) in a range:
 double rangeRNG(double lowerLimit, double upperLimit);
-// 2.9.2) Function to update the shadow time of the next waiting job:
+
+// Updates the shadow time of the next waiting job:
 void updateShadowTimeOfNext(std::vector<Job> reservingJobs, Job selectedJob, int targetNodeId);
 
-// --------------------------
-// 3.0: Scheduling Algorithms
-// --------------------------
-// 3.1) Shortest Job First (SJF)
+// ---------------------
+// Scheduling Algorithms
+// ---------------------
+
+// Shortest Job First (SJF)
 Metrics runSJF(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime, int mode);
-// 3.2) First Come First Serve (FCFS)
-Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime, int mode);
-// 3.3) Extensible Argonne Scheduling System (EASY)
-Metrics runEASY(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime, int mode);
-// 3.4) Extensible Argonne Scheduling System (CBF)
+
+// Conservative Backfilling (CBF)
 Metrics runCBF(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime, int mode);
+
+// First Come First Serve (FCFS)
+Metrics runFCFS(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime, int mode);
+
+// Extensible Argonne Scheduling System (EASY)
+Metrics runEASY(std::vector<Node> nodeList, std::vector<Job> jobList, std::time_t startTime, int mode);
