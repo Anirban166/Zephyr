@@ -41,8 +41,6 @@ Metrics runEASY(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp 
             }
         }
         // Sort jobs based on the submit times for EASY:
-        // std::cout << "Current time: " << currentTime << " queue before sort.\n";
-        // printJobs(jobQueue);
         std::sort(jobQueue.begin(), jobQueue.end(), [](const auto &lhs, const auto &rhs)
         { return lhs.submitTime > rhs.submitTime; });
         // Reversing items in container to switch the order to descending:
@@ -60,7 +58,6 @@ Metrics runEASY(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp 
 
                 if(currentTime == ((*runningJob).startTime + (*runningJob).trueRunTime))
                 {
-                    // print("Job: ", (*runningJob).jobNum, " finished running on node: ", (*runningJob).nodeID, "\n");
                     outputfile << "Job " << (*runningJob).jobNum << " finished running on node " << (*runningJob).nodeID << "\n";
                     (*runningJob).stopTime = currentTime;
                     // Reset the waiting job if it finishes.
@@ -169,12 +166,24 @@ Metrics runEASY(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp 
             else
             {
                 (*waitingJob).waitTime += 1;
+
                 // If no other job was waiting to start at shadowtime, now we are.
                 if(reservedJobNum == noJobReservation)
                 {
                     reservedJobNum = (*waitingJob).jobNum;
+                    
+                    // Identifying which node this job would ideally run on: (to know which queue of running jobs we need to look at)
+                    int targetNodeID = isJobValid((*waitingJob), nodeList);
+                    
+                    // Finding the earliest time that node will become free based on currently running jobs:
+                    if(targetNodeID != -1)
+                    {
+                        shadowTime = findShadowTimeFromPreceedingJobs(runningJobs, targetNodeID);
+                        outputfile << "Reservation made for Job " << reservedJobNum << ". Shadow Time set to: " << shadowTime << "\n";
+                    }
                 }
-                // Add the rejected job to the waiting list:
+
+                // Adding the rejected job to the waiting list:
                 waitingList.push_back(*waitingJob);
             }
         }
