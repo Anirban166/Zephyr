@@ -2,8 +2,7 @@
 
 double rangeRNG(double lowerLimit, double upperLimit)
 {
-    std::random_device randomDevice;
-    std::mt19937 generator(randomDevice());
+    static std::mt19937 generator(std::random_device{}());
     std::uniform_int_distribution<> uniformDistributionBasedRandomNumber(lowerLimit, upperLimit);
     return uniformDistributionBasedRandomNumber(generator);
 }
