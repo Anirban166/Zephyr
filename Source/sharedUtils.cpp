@@ -21,7 +21,6 @@ int isJobValid(Job waitingJob, std::vector<Node> nodeList)
     {
         if((waitingJob.requestedCPUs <= (*currentNode).coreCount) && (waitingJob.requestedMemory <= (*currentNode).memoryAmount))
         {
-            // print("Returning available node with ID: ", (*currentNode).nodeID, " for job: ", waitingJob.jobNum, "\n");
             nodeID = (*currentNode).nodeID;
             return nodeID;
         }
@@ -113,7 +112,8 @@ void printReservedJobs(std::vector<Job> jobs)
 std::vector<Job> verifyJobs(std::vector<Job> jobList, std::vector<Node> nodeList)
 {
     // First check if any jobs are ready to be added to the queue:
-    for(std::vector<Job>::iterator currentJobIter = std::prev(jobList.end()); currentJobIter != std::prev(jobList.begin()); --currentJobIter)
+    auto currentJobIter = jobList.begin();
+    while (currentJobIter != jobList.end())
     {
         Job currentJob = *currentJobIter;
         // Check if it is possible to service this request at all: (based on the maximum resources we have available)
@@ -121,7 +121,11 @@ std::vector<Job> verifyJobs(std::vector<Job> jobList, std::vector<Node> nodeList
         {
             print("Erasing job: ", currentJob.jobNum, "\n");
             // Discard job if infeasible:
-            jobList.erase(currentJobIter);
+            currentJobIter = jobList.erase(currentJobIter);
+        }
+        else
+        {
+            ++currentJobIter;
         }
     }
     return jobList;

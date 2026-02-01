@@ -22,16 +22,21 @@ Metrics runEASY(std::vector<Node> nodeList, std::vector<Job> jobList, timestamp 
         // First check if any jobs are ready to be added to the queue:
         if(jobList.size())
         {
-            for(std::vector<Job>::iterator currentJobIter = std::prev(jobList.end()); currentJobIter != std::prev(jobList.begin()); --currentJobIter)
+            auto currentJobIter = jobList.begin();
+            while(currentJobIter != jobList.end())
             {
-                Job currentJob = *currentJobIter;
+                Job &currentJob = *currentJobIter;
                 // If the job is ready to be submitted right now, put it in the queue and remove it from the joblist:
                 if(currentJob.submitTime == currentTime)
                 {
                     outputfile << "Adding job number " << currentJob.jobNum << " to the queue\n";
                     currentJob.jobStatus = QUEUED;
                     jobQueue.push_back(currentJob);
-                    jobList.erase(currentJobIter);
+                    currentJobIter = jobList.erase(currentJobIter);
+                }
+                else
+                {
+                    ++currentJobIter;
                 }
             }
         }
